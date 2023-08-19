@@ -21,8 +21,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public User findByName(String username) {
-        return userRepository.findByUsername(username).orElse(null); // or else what?
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByName(username);
-        if (user == null) throw new UsernameNotFoundException("username not found" + username);
+        User user = findByUsername(username)
+                .orElseThrow(()->new UsernameNotFoundException("username not found" + username));
         return new org.springframework.security.core.userdetails
                 .User(user.getUsername(), user.getPassword(), mapUserAuthorities(user.getAuthorities()));
     }

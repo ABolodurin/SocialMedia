@@ -13,4 +13,5 @@ public class AuthResponse {
     public static AuthResponse of(String token) {
         return new AuthResponse(token);
     }
+
 }

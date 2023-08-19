@@ -11,13 +11,11 @@ import ru.bolodurin.socialmedia.entities.AuthResponse;
 import ru.bolodurin.socialmedia.entities.LoginRequest;
 import ru.bolodurin.socialmedia.entities.RegisterRequest;
 import ru.bolodurin.socialmedia.services.AuthenticationService;
-import ru.bolodurin.socialmedia.services.UserService;
 
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController {
-    private final UserService userService;
     private final AuthenticationService authService;
     @Override
     @PostMapping("/register")
@@ -27,6 +25,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
+    @PostMapping("/login")
     public @ResponseBody ResponseEntity<AuthResponse> login(
             @RequestBody LoginRequest request) {
         return ResponseEntity.of(authService.auth(request));

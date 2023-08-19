@@ -13,7 +13,6 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor
 public class RegisterRequest {
     private String username;
-    @Email
     private String email;
     private String password;
 
