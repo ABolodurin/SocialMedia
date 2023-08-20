@@ -6,10 +6,6 @@ import ru.bolodurin.socialmedia.entities.LoginRequest;
 import ru.bolodurin.socialmedia.entities.RegisterRequest;
 
 public interface AuthController {
-    /*
-    VOID?
-    JWT!!!
-     */
     ResponseEntity<AuthResponse> register(RegisterRequest request);
     ResponseEntity<AuthResponse> login(LoginRequest request);
 

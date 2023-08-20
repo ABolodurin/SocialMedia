@@ -10,18 +10,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.security.JwtAuthFilter;
-import ru.bolodurin.socialmedia.services.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +24,13 @@ import ru.bolodurin.socialmedia.services.UserService;
 public class SecurityConfig {
 
     private static final String ROLE_USER = "USER";
+    private static final String[] WHITELIST = {
+            "/register",
+            "/login",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v2/api-docs",
+            "/webjars/**"};
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
 
@@ -66,7 +67,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .antMatchers("/register", "/login")
+                .antMatchers(WHITELIST)
                 .permitAll()
                 .anyRequest()
                 .authenticated()

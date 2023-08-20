@@ -1,5 +1,6 @@
 package ru.bolodurin.socialmedia.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import ru.bolodurin.socialmedia.services.AuthenticationService;
 public class AuthControllerImpl implements AuthController {
     private final AuthenticationService authService;
     @Override
+    @ApiOperation(value = "Receives registration form and returns bearer token")
     @PostMapping("/register")
     public @ResponseBody ResponseEntity<AuthResponse> register(
             @RequestBody RegisterRequest request) {
@@ -25,6 +27,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
+    @ApiOperation(value = "Receives login form and returns bearer token")
     @PostMapping("/login")
     public @ResponseBody ResponseEntity<AuthResponse> login(
             @RequestBody LoginRequest request) {
