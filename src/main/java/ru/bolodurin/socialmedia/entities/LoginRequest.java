@@ -1,5 +1,6 @@
 package ru.bolodurin.socialmedia.entities;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,9 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
+    @ApiModelProperty(notes = "User email")
     private String email;
+    @ApiModelProperty(notes = "User password")
     private String password;
+
 }
