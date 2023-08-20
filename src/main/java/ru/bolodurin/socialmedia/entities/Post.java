@@ -1,18 +1,23 @@
 package ru.bolodurin.socialmedia.entities;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@Getter
+@Data
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "posts")
 public class Post
@@ -30,14 +35,14 @@ public class Post
 
 //    private Image????
 
-//    private final timeStamp???
-//    @ManyToOne
-//    private User user;
+    //    private final timeStamp???
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
 
-
-    public Post(String header, String content) {
+    public Post(String header, String content, User user) {
         this.header = header;
         this.content = content;
+//        this.user = user;
         //timeStamp
     }
 

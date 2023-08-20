@@ -13,6 +13,10 @@ import java.util.ArrayList;
 
 @Configuration
 public class SwaggerConfig {
+    public static final String AUTH_TAG = "User authorization resource";
+    public static final String FEED_TAG = "User feed resource";
+    public static final String POST_TAG = "User posts resource";
+
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)

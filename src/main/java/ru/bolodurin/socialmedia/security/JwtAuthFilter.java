@@ -19,8 +19,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private static final String BEARER = "Bearer ";
-    private static final int TOKEN_START_POSITION = BEARER.length();
+//    private static final int TOKEN_START_POSITION = BEARER.length();
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -32,12 +31,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String token;
         final String loginEmail;
 
-        if (authHeader == null || !authHeader.startsWith(BEARER)) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        token = authHeader.substring(TOKEN_START_POSITION);
+        token = jwtService.getTokenFromheader(authHeader);
+//        token = authHeader.substring(TOKEN_START_POSITION);
         loginEmail = jwtService.extractLogin(token);
 
         if (loginEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

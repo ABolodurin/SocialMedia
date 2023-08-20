@@ -1,9 +1,12 @@
 package ru.bolodurin.socialmedia.services;
 
-import org.springframework.data.domain.Page;
-import ru.bolodurin.socialmedia.entities.Post;
+import ru.bolodurin.socialmedia.entities.PostResponse;
+import ru.bolodurin.socialmedia.entities.PostRequest;
+
+import java.util.Optional;
 
 public interface PostService {
+    Optional<PostResponse> create(String token, PostRequest post);
 //    Post findById(Long id);
 //    Page<Post> findByUser(String username);
 //    Page<Post> findForUser(String username);

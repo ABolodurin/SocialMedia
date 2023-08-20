@@ -17,6 +17,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
+    private static final int TOKEN_START_POSITION = 7; //"Bearer "
     private static final long EXPIRATION_TIME_MILLS = 1000 * 60 * 24;
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
@@ -70,4 +71,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public String getTokenFromheader(String authHeader) {
+        return authHeader.substring(TOKEN_START_POSITION);
+    }
 }

@@ -1,30 +1,26 @@
 package ru.bolodurin.socialmedia.entities;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
@@ -37,14 +33,23 @@ public class User implements UserDetails {         //в этом же юзере
     @Column(name = "email")
     private String email;
 
+    //    hashPassword();
     @Column(name = "password")
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    private List<Post> posts;
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Post> posts;
+
+    public User() {
+        this.posts = new ArrayList<>();
+    }
 
 //    @ManyToMany
 //    private List<User> subscriptions;

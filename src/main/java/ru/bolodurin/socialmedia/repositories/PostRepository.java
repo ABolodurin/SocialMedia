@@ -5,7 +5,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import ru.bolodurin.socialmedia.entities.Post;
 
+import java.util.Optional;
+
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Long>, JpaRepository<Post, Long> {
-
+    Optional<Post> findByHeader(String header);
 }

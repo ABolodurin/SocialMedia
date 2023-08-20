@@ -23,7 +23,7 @@ import ru.bolodurin.socialmedia.security.JwtAuthFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String ROLE_USER = "USER";
+    private static final String ROLE_USER = "USER"; //??
     private static final String[] WHITELIST = {
             "/register",
             "/login",

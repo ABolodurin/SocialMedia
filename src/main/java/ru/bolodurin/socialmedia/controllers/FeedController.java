@@ -6,5 +6,5 @@ import ru.bolodurin.socialmedia.entities.AuthRequest;
 import ru.bolodurin.socialmedia.entities.Post;
 
 public interface FeedController {
-    ResponseEntity<Page<Post>> showFeed(AuthRequest request);
+    ResponseEntity<Page<Post>> showFeed(String token);
 }
