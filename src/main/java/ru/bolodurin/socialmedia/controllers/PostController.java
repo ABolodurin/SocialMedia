@@ -5,8 +5,8 @@ import ru.bolodurin.socialmedia.entities.PostResponse;
 import ru.bolodurin.socialmedia.entities.PostRequest;
 
 public interface PostController {
-    ResponseEntity<PostResponse> createPost(String token, PostRequest post);
-//    void updatePost(User user, PostDTO post); // or post ID
-//    void deletePost(User user, PostDTO post); // or post ID
+    ResponseEntity<PostResponse> createPost(String authHeader, PostRequest post);
+    ResponseEntity<PostResponse> updatePost(String authHeader, PostResponse updatedPost);
+    ResponseEntity<PostResponse> deletePost(String authHeader, PostResponse post);
 
 }

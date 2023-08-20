@@ -36,7 +36,7 @@ public class Post
 //    private Image????
 
     //    private final timeStamp???
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     public Post(String header, String content, User user) {

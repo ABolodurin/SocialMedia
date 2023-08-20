@@ -24,24 +24,24 @@ import ru.bolodurin.socialmedia.services.AuthenticationService;
 public class AuthControllerImpl implements AuthController {
     private final AuthenticationService authService;
 
-    @Override
     @ApiOperation(value = "Receives registration form and returns bearer token")
     @ApiResponses(value = {
             @ApiResponse(code = 100, message = "100 is the message"), // what?
-            @ApiResponse(code = 200, message = "Successful registration")
-    })
+            @ApiResponse(code = 200, message = "Successful registration")})
+
+    @Override
     @PostMapping("/register")
     public @ResponseBody ResponseEntity<AuthResponse> register(
             @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request).orElse(null)); //orElse
     }
 
-    @Override
     @ApiOperation(value = "Receives login form and returns bearer token")
     @ApiResponses(value = {
             @ApiResponse(code = 100, message = "100 is the message"), // what?
-            @ApiResponse(code = 200, message = "Successful login")
-    })
+            @ApiResponse(code = 200, message = "Successful login")})
+
+    @Override
     @PostMapping("/login")
     public @ResponseBody ResponseEntity<AuthResponse> login(
             @RequestBody LoginRequest request) {

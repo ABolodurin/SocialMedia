@@ -40,11 +40,9 @@ public class User implements UserDetails {         //в этом же юзере
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(
-            mappedBy = "user",
+    @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+            orphanRemoval = true)
     private List<Post> posts;
 
     public User() {
