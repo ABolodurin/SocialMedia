@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,7 +19,7 @@ public class PostResponse {
     private String header;
     @ApiModelProperty(notes = "Post content")
     private String content;
-//    private image;
-//    private timeStamp;
+    @ApiModelProperty(notes = "Post content")
+    private LocalDateTime timeStamp;
 
 }

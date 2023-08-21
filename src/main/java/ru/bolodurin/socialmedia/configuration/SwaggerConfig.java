@@ -16,16 +16,7 @@ public class SwaggerConfig {
     public static final String AUTH_TAG = "User authorization resource";
     public static final String FEED_TAG = "User feed resource";
     public static final String POST_TAG = "User posts resource";
-
-    @Bean
-    public Docket productApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("ru.bolodurin.socialmedia"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(metaInfo());
-    }
+    public static final String SUBS_TAG = "User subscriptions resource";
 
     private ApiInfo metaInfo() {
         return new ApiInfo(
@@ -36,6 +27,16 @@ public class SwaggerConfig {
                 new Contact("Aleksandr Bolodurin", "https://t.me/bandit26", "shur026@yandex.ru"),
                 null,
                 null, new ArrayList<>());
+    }
+
+    @Bean
+    public Docket productApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("ru.bolodurin.socialmedia"))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(metaInfo());
     }
 
 }

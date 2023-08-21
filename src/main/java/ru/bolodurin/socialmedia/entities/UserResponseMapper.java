@@ -5,14 +5,12 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class UserResponseMapper implements Function<User,UserDTO> {
+public class UserResponseMapper implements Function<User, UserResponse> {
     @Override
-    public UserDTO apply(User product) {
-        return new UserDTO(
-//                product.getUsername(),
-//                product.getPosts(),
-//                product.getSubscriptions(),
-//                product.getSubscribers()
+    public UserResponse apply(User user) {
+        return new UserResponse(
+                user.getUsername()
         );
     }
+
 }

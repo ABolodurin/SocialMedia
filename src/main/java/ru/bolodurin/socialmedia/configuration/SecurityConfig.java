@@ -15,22 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.bolodurin.socialmedia.security.JwtAuthFilter;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private static final String ROLE_USER = "USER"; //??
     private static final String[] WHITELIST = {
             "/register",
             "/login",
@@ -58,15 +51,6 @@ public class SecurityConfig {
     public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-/*
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests()
-//                .antMatchers("/products/show/*").hasRole(ROLE_USER)
-                .anyRequest().permitAll();
-    }
-*/
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

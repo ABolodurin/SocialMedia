@@ -1,14 +1,16 @@
 package ru.bolodurin.socialmedia.controllers;
 
-import ru.bolodurin.socialmedia.entities.User;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import ru.bolodurin.socialmedia.entities.SubsResponse;
+import ru.bolodurin.socialmedia.entities.UserRequest;
 
 public interface SubscriptionsController {
-    void subscribe(User subscriber, User user);
-    void unsubscribe(User subscriber, User user);
-    List<User> getSubscriptions(User subscriber);
-    List<User> getSubscribers(User user);
-    List<User> getFriendlist(User user);
+    ResponseEntity<SubsResponse> subscribe(UserRequest userToSubscribe, String authHeader);
+
+    ResponseEntity<SubsResponse> unsubscribe(UserRequest userToUnsubscribe, String authHeader);
+
+    ResponseEntity<SubsResponse> getSubscriptions(String authHeader);
+//    List<User> getSubscribers(User user);
+//    List<User> getFriendlist(User user);
 
 }

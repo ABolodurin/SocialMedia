@@ -13,8 +13,6 @@ import ru.bolodurin.socialmedia.entities.Role;
 import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.security.JwtService;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -24,7 +22,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authManager;
 
     @Override
-    public Optional<AuthResponse> register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         User user = User
                 .builder()
                 .username(request.getUsername())
@@ -39,20 +37,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Optional<AuthResponse> auth(LoginRequest request) {
+    public AuthResponse auth(LoginRequest request) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),request.getPassword()));
+                        request.getEmail(), request.getPassword()));
 
-        User user = userService.findByEmail(request.getEmail())
-                .orElseThrow(()-> new UsernameNotFoundException("User with email " + request.getEmail() + "not found"));
-
-        return getResponseFor(user);
+        return getResponseFor(userService.findByEmail(request.getEmail()));
     }
 
-    private Optional<AuthResponse> getResponseFor(User user){
+    private AuthResponse getResponseFor(User user) {
         String token = jwtService.generateToken(user);
-        return Optional.of(AuthResponse.of(token));
+
+        return AuthResponse.of(token);
     }
 
 }

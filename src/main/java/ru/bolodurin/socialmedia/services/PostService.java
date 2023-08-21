@@ -1,7 +1,7 @@
 package ru.bolodurin.socialmedia.services;
 
-import ru.bolodurin.socialmedia.entities.PostResponse;
 import ru.bolodurin.socialmedia.entities.PostRequest;
+import ru.bolodurin.socialmedia.entities.PostResponse;
 
 import java.util.Optional;
 

@@ -19,7 +19,6 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-//    private static final int TOKEN_START_POSITION = BEARER.length();
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -36,8 +35,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        token = jwtService.getTokenFromheader(authHeader);
-//        token = authHeader.substring(TOKEN_START_POSITION);
+        token = jwtService.getTokenFromHeader(authHeader);
         loginEmail = jwtService.extractLogin(token);
 
         if (loginEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

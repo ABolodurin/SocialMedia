@@ -10,14 +10,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class FeedServiceImpl implements FeedService{
+public class FeedServiceImpl implements FeedService {
     private final JwtAuthFilter jwtAuthFilter;
     private final UserService userService;
     private final PostService postService;
 
     @Override
     public Optional<Page<Post>> getFeedForUser(String token) {
-
         return null;
     }
 

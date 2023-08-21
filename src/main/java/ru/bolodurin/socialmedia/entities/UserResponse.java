@@ -1,5 +1,6 @@
 package ru.bolodurin.socialmedia.entities;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class UserResponse {
+    @ApiModelProperty(value = "Username")
     private String username;
-    private List<Post> posts; // map<id,post> for check id?
-    private List<User> subscriptions;
-    private List<User> subscribers;
 
 }

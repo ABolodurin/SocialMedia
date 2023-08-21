@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.PostResponseMapper;
 import ru.bolodurin.socialmedia.entities.PostRequest;
 import ru.bolodurin.socialmedia.entities.PostResponse;
+import ru.bolodurin.socialmedia.entities.PostResponseMapper;
 import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.repositories.PostRepository;
 import ru.bolodurin.socialmedia.security.JwtService;
@@ -23,18 +23,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Optional<PostResponse> create(String authHeader, PostRequest post) {
-        String username = jwtService.extractLogin(
-                jwtService.getTokenFromheader(authHeader));
-        User user = userService.findByUsername(username).orElseThrow();
+        User user = userService.findUserByHeader(authHeader, jwtService);
 
-        postRepository.save(Post
-                .builder()
-                .header(post.getHeader())
-                .content(post.getContent())
-                .user(user)
-                .build());
+        postRepository.save(Post.builder().header(post.getHeader()).content(post.getContent()).user(user).build());
 
-        Post postedPost = postRepository.findByHeader(post.getHeader()).orElse((new Post("error","error", user)));
+        Post postedPost = postRepository.findByHeader(post.getHeader()).orElse((new Post()));
         return Optional.ofNullable(postResponseMapper.apply(postedPost));
     }
 
@@ -56,16 +49,16 @@ public class PostServiceImpl implements PostService {
     public Optional<PostResponse> delete(String authHeader, PostResponse postResponse) {
         Post post = postRepository.findById(postResponse.getId()).orElseThrow();
 
-        if (!isOfACurrentUser(authHeader, post)) throw new RuntimeException(
-                "You can't delete post which is not yours. PostID: " + post.getId());
+        if (!isOfACurrentUser(authHeader, post))
+            throw new RuntimeException("You can't delete post which is not yours. PostID: " + post.getId());
 
         postRepository.deleteById(post.getId());
         return Optional.empty();
     }
 
-    private boolean isOfACurrentUser(String authHeader, Post post){
+    private boolean isOfACurrentUser(String authHeader, Post post) {
         String username = jwtService.extractLogin(
-                jwtService.getTokenFromheader(authHeader));
+                jwtService.getTokenFromHeader(authHeader));
 
         return post.getUser().getUsername().equals(username);
     }

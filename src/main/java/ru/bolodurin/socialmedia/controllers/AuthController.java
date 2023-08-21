@@ -7,6 +7,7 @@ import ru.bolodurin.socialmedia.entities.RegisterRequest;
 
 public interface AuthController {
     ResponseEntity<AuthResponse> register(RegisterRequest request);
+
     ResponseEntity<AuthResponse> login(LoginRequest request);
 
 }

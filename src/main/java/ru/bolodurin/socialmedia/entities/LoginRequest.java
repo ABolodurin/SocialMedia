@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
@@ -14,8 +16,11 @@ import javax.validation.constraints.Email;
 @NoArgsConstructor
 public class LoginRequest {
     @ApiModelProperty(notes = "User email")
+    @NotEmpty
+    @Email
     private String email;
     @ApiModelProperty(notes = "User password")
+    @NotEmpty
     private String password;
 
 }

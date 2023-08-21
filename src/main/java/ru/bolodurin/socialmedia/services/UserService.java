@@ -1,25 +1,19 @@
 package ru.bolodurin.socialmedia.services;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.bolodurin.socialmedia.entities.Post;
 import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.security.JwtService;
 
-import java.util.Optional;
-
-public interface UserService extends UserDetailsService {
-    Optional<User> findByUsername(String username);
+public interface UserService
+//        extends UserDetailsService
+{
+    User findByUsername(String username);
 
     void add(User user);
 
-    Optional<User> findByEmail(String username);
+    User findByEmail(String username);
 
     void update(String username, User updatedUser);
 
-//    List<Post> getPostsOf(String username);
-//
-//
-//    void updatePost(Long id);
-//
-//    void deletePost(Long id);
+    User findUserByHeader(String authHeader, JwtService jwtService);
 
 }

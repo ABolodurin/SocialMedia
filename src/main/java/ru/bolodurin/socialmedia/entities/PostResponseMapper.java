@@ -11,7 +11,8 @@ public class PostResponseMapper implements Function<Post, PostResponse> {
         return new PostResponse(
                 post.getId(),
                 post.getHeader(),
-                post.getContent()
+                post.getContent(),
+                post.getTimestamp()
         );
     }
 }

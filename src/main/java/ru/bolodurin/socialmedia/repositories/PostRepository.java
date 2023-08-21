@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Long>, JpaRepository<Post, Long> {
     Optional<Post> findByHeader(String header);
+
 }
