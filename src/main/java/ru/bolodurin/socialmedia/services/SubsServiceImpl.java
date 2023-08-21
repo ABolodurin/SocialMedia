@@ -12,7 +12,6 @@ import ru.bolodurin.socialmedia.security.JwtService;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,29 +22,29 @@ public class SubsServiceImpl implements SubsService {
     private final UserResponseMapper userResponseMapper;
 
     @Override
-    public Optional<SubsResponse> subscribe(UserRequest userToSubscribe, String authHeader) {
+    public SubsResponse subscribe(UserRequest userToSubscribe, String authHeader) {
         User subscriber = userService.findUserByHeader(authHeader, jwtService);
         User subscription = userService.findByUsername(userToSubscribe.getUsername());
 
         subscriber.getSubscriptions().add(subscription);
         userRepository.save(subscriber);
 
-        return Optional.of(new SubsResponse());
+        return new SubsResponse();
     }
 
     @Override
-    public Optional<SubsResponse> unsubscribe(UserRequest userToUnsubscribe, String authHeader) {
+    public SubsResponse unsubscribe(UserRequest userToUnsubscribe, String authHeader) {
         User subscriber = userService.findUserByHeader(authHeader, jwtService);
         User subscription = userService.findByUsername(userToUnsubscribe.getUsername());
 
         subscriber.getSubscriptions().remove(subscription);
         userRepository.save(subscriber);
 
-        return Optional.of(new SubsResponse());
+        return new SubsResponse();
     }
 
     @Override
-    public Optional<SubsResponse> getSubscriptions(String authHeader) {
+    public SubsResponse getSubscriptions(String authHeader) {
         List<UserResponse> subscriptions = new LinkedList<>();
 
         userService
@@ -53,7 +52,7 @@ public class SubsServiceImpl implements SubsService {
                 .getSubscriptions()
                 .forEach(sub -> subscriptions.add(userResponseMapper.apply(sub)));
 
-        return Optional.of(new SubsResponse(subscriptions));
+        return new SubsResponse(subscriptions);
     }
 
 }

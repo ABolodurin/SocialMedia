@@ -4,16 +4,19 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class SubsResponse {
     @ApiModelProperty(notes = "List of subscriptions/subscribers")
     private List<UserResponse> users;
+
+    public SubsResponse() {
+        this.users = new LinkedList<>();
+    }
 
 }

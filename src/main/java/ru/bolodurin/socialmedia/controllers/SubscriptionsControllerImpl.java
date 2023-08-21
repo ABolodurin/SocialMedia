@@ -33,7 +33,7 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
             @RequestBody UserRequest userToSubscribe,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
-        return ResponseEntity.ok(subsService.subscribe(userToSubscribe, authHeader).orElseThrow());
+        return ResponseEntity.ok(subsService.subscribe(userToSubscribe, authHeader));
     }
 
     @ApiOperation(value = "Unsubscribe")
@@ -45,7 +45,7 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
             @RequestBody UserRequest userToUnsubscribe,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
-        return ResponseEntity.ok(subsService.unsubscribe(userToUnsubscribe, authHeader).orElseThrow());
+        return ResponseEntity.ok(subsService.unsubscribe(userToUnsubscribe, authHeader));
     }
 
     @ApiOperation(value = "Get current subscriptions")
@@ -55,7 +55,7 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
     public @ResponseBody ResponseEntity<SubsResponse> getSubscriptions(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
-        return ResponseEntity.ok(subsService.getSubscriptions(authHeader).orElseThrow());
+        return ResponseEntity.ok(subsService.getSubscriptions(authHeader));
     }
 
 }
