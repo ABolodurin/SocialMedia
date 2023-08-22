@@ -10,7 +10,6 @@ public interface SubscriptionsController {
     ResponseEntity<SubsResponse> unsubscribe(UserRequest userToUnsubscribe, String authHeader);
 
     ResponseEntity<SubsResponse> getSubscriptions(String authHeader);
-//    List<User> getSubscribers(User user);
-//    List<User> getFriendlist(User user);
+    ResponseEntity<SubsResponse> getSubscribers(String authHeader);
 
 }

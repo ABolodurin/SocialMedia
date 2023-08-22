@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -25,7 +26,7 @@ import ru.bolodurin.socialmedia.services.SubsService;
 public class SubscriptionsControllerImpl implements SubscriptionsController{
     private final SubsService subsService;
     @ApiOperation(value = "Subscribe")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful subscription"))
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful, returns subscriptions"))
 
     @Override
     @PutMapping("/sub")
@@ -37,7 +38,7 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
     }
 
     @ApiOperation(value = "Unsubscribe")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful unsubscription"))
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful, returns subscriptions"))
 
     @Override
     @PutMapping("/unsub")
@@ -52,10 +53,22 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
     @ApiResponses(value = @ApiResponse(code = 200, message = "Successful"))
 
     @Override
+    @GetMapping("/subscriptions")
     public @ResponseBody ResponseEntity<SubsResponse> getSubscriptions(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
         return ResponseEntity.ok(subsService.getSubscriptions(authHeader));
+    }
+
+    @ApiOperation(value = "Get current subscribers")
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful"))
+
+    @Override
+    @GetMapping("/subscribers")
+    public @ResponseBody ResponseEntity<SubsResponse> getSubscribers(
+            @ApiParam(value = "\"Bearer \"+ autorization token")
+            @RequestHeader(value = "Authorization") String authHeader) {
+        return ResponseEntity.ok(subsService.getSubscribers(authHeader));
     }
 
 }

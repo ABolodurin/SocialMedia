@@ -16,4 +16,8 @@ public class UserResponse {
     @ApiModelProperty(value = "Username")
     private String username;
 
+    public static UserResponse of(String username){
+        return new UserResponse(username);
+    }
+
 }

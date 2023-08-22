@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,10 +34,10 @@ public class PostControllerImpl implements PostController{
 
     @Override
     @PostMapping
-    public @ResponseBody ResponseEntity<PostResponse> createPost(
+    public @ResponseBody ResponseEntity<Page<PostResponse>> createPost(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader, @RequestBody PostRequest post) {
-        return ResponseEntity.ok(postService.create(authHeader, post).orElse(null));
+        return ResponseEntity.ok(postService.create(authHeader, post));
     }
 
     @ApiOperation(value = "Updates the user's post")
@@ -44,10 +45,10 @@ public class PostControllerImpl implements PostController{
 
     @Override
     @PutMapping
-    public @ResponseBody ResponseEntity<PostResponse> updatePost(
+    public @ResponseBody ResponseEntity<Page<PostResponse>> updatePost(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader, @RequestBody PostResponse updatedPost) {
-        return ResponseEntity.ok(postService.update(authHeader, updatedPost).orElse(null));
+        return ResponseEntity.ok(postService.update(authHeader, updatedPost));
     }
 
     @ApiOperation(value = "Deletes the user's post")
@@ -56,10 +57,10 @@ public class PostControllerImpl implements PostController{
 
     @Override
     @DeleteMapping
-    public @ResponseBody ResponseEntity<PostResponse> deletePost(
+    public @ResponseBody ResponseEntity<Page<PostResponse>> deletePost(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader, @RequestBody PostResponse post) {
-        return ResponseEntity.ok(postService.delete(authHeader, post).orElse(null));
+        return ResponseEntity.ok(postService.delete(authHeader, post));
     }
 
 }

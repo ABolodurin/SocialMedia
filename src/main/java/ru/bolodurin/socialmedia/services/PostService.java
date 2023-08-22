@@ -1,18 +1,25 @@
 package ru.bolodurin.socialmedia.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import ru.bolodurin.socialmedia.entities.PostRequest;
 import ru.bolodurin.socialmedia.entities.PostResponse;
-
-import java.util.Optional;
+import ru.bolodurin.socialmedia.entities.UserResponse;
 
 public interface PostService {
-    Optional<PostResponse> create(String token, PostRequest post);
+    Pageable DEFAULT_PAGEABLE = PageRequest.of(0, 10, Sort.by("timestamp").descending());
 
-    Optional<PostResponse> update(String authHeader, PostResponse updatedPost);
+    Page<PostResponse> create(String token, PostRequest post);
 
-    Optional<PostResponse> delete(String authHeader, PostResponse post);
-//    Post findById(Long id);
-//    Page<Post> findByUser(String username);
-//    Page<Post> findForUser(String username);
+    Page<PostResponse> update(String authHeader, PostResponse updatedPost);
+
+    Page<PostResponse> delete(String authHeader, PostResponse post);
+
+    PostResponse findById(Long id);
+
+    Page<PostResponse> findByUser(UserResponse user);
+//    Page<PostResponse> findForUser(UserResponse user);
 
 }

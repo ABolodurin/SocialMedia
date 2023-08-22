@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bolodurin.socialmedia.configuration.SwaggerConfig;
 import ru.bolodurin.socialmedia.entities.Post;
+import ru.bolodurin.socialmedia.entities.PostResponse;
 import ru.bolodurin.socialmedia.services.FeedService;
 
 @RequestMapping("/feed")
@@ -24,15 +25,15 @@ import ru.bolodurin.socialmedia.services.FeedService;
 public class FeedControllerImpl implements FeedController {
     private final FeedService feedService;
 
-    @ApiOperation(value = "Creates the user's post")
+    @ApiOperation(value = "Shows feed for current user")
     @ApiResponses(value = @ApiResponse(code = 200, message = "Successful creation"))
 
     @Override
     @GetMapping
-    public @ResponseBody ResponseEntity<Page<Post>> showFeed(
+    public @ResponseBody ResponseEntity<Page<PostResponse>> showFeed(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String token) {
-        return ResponseEntity.ok(feedService.getFeedForUser(token).orElse(null));
+        return ResponseEntity.ok(feedService.getFeedForUser(token));
     }
 
 }

@@ -1,6 +1,11 @@
 package ru.bolodurin.socialmedia.services;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bolodurin.socialmedia.entities.Post;
@@ -8,10 +13,9 @@ import ru.bolodurin.socialmedia.entities.PostRequest;
 import ru.bolodurin.socialmedia.entities.PostResponse;
 import ru.bolodurin.socialmedia.entities.PostResponseMapper;
 import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.entities.UserResponse;
 import ru.bolodurin.socialmedia.repositories.PostRepository;
 import ru.bolodurin.socialmedia.security.JwtService;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,39 +26,58 @@ public class PostServiceImpl implements PostService {
     private final PostResponseMapper postResponseMapper;
 
     @Override
-    public Optional<PostResponse> create(String authHeader, PostRequest post) {
+    public Page<PostResponse> create(String authHeader, PostRequest post) {
         User user = userService.findUserByHeader(authHeader, jwtService);
 
         postRepository.save(new Post(post.getHeader(), post.getContent(), user));
 
-        Post postedPost = postRepository.findByHeader(post.getHeader()).orElse((new Post()));
-        return Optional.ofNullable(postResponseMapper.apply(postedPost));
+        return this.findByUser(UserResponse.of(user.getUsername()));
     }
 
     @Override
     @Transactional
-    public Optional<PostResponse> update(String authHeader, PostResponse updatedPost) {
+    public Page<PostResponse> update(String authHeader, PostResponse updatedPost) {
         Post post = postRepository.findById(updatedPost.getId()).orElseThrow();
 
-        if (!isOfACurrentUser(authHeader, post)) return Optional.empty();
+        if (!isOfACurrentUser(authHeader, post)) throw new RuntimeException();
 
         post.setHeader(updatedPost.getHeader());
         post.setContent(updatedPost.getContent());
         postRepository.save(post);
 
-        return postRepository.findById(updatedPost.getId()).map(postResponseMapper);
+        return this.findByUser(UserResponse.of(jwtService.extractLogin(authHeader)));
     }
 
     @Override
-    public Optional<PostResponse> delete(String authHeader, PostResponse postResponse) {
+    public Page<PostResponse> delete(String authHeader, PostResponse postResponse) {
         Post post = postRepository.findById(postResponse.getId()).orElseThrow();
 
         if (!isOfACurrentUser(authHeader, post))
             throw new RuntimeException("You can't delete post which is not yours. PostID: " + post.getId());
 
         postRepository.deleteById(post.getId());
-        return Optional.empty();
+
+        return this.findByUser(UserResponse.of(jwtService.extractLogin(authHeader)));
     }
+
+    @Override
+    public PostResponse findById(Long id) {
+        return postRepository
+                .findById(id)
+                .map(postResponseMapper)
+                .orElseThrow();
+    }
+
+    @Override
+    public Page<PostResponse> findByUser(UserResponse userResponse) {
+        User user = userService.findByUsername(userResponse.getUsername());
+
+        return postRepository
+                .findAllByUserOrderByTimestampDesc(user, PostService.DEFAULT_PAGEABLE)
+                .orElseThrow()
+                .map(postResponseMapper);
+    }
+
 
     private boolean isOfACurrentUser(String authHeader, Post post) {
         String username = jwtService.extractLogin(
