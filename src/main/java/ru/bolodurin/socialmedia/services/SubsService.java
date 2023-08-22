@@ -13,4 +13,3 @@ public interface SubsService {
     SubsResponse getSubscribers(String authHeader);
 
 }
-

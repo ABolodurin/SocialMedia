@@ -20,6 +20,5 @@ public interface PostService {
     PostResponse findById(Long id);
 
     Page<PostResponse> findByUser(UserResponse user);
-//    Page<PostResponse> findForUser(UserResponse user);
 
 }

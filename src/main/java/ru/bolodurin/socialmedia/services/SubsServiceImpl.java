@@ -7,7 +7,6 @@ import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.entities.UserRequest;
 import ru.bolodurin.socialmedia.entities.UserResponse;
 import ru.bolodurin.socialmedia.entities.UserResponseMapper;
-import ru.bolodurin.socialmedia.repositories.SubscriptionsRepository;
 import ru.bolodurin.socialmedia.repositories.UserRepository;
 import ru.bolodurin.socialmedia.security.JwtService;
 
@@ -21,7 +20,6 @@ public class SubsServiceImpl implements SubsService {
     private final JwtService jwtService;
     private final UserService userService;
     private final UserResponseMapper userResponseMapper;
-    private final SubscriptionsRepository subRepository;
 
     @Override
     public SubsResponse subscribe(UserRequest userToSubscribe, String authHeader) {
@@ -67,15 +65,6 @@ public class SubsServiceImpl implements SubsService {
                 .forEach(sub -> subscribers.add(userResponseMapper.apply(sub)));
 
         return new SubsResponse(subscribers);
-    }
-
-    private boolean isFriend(String authHeader, User userToCheck) {
-        User current = userService.findUserByHeader(authHeader, jwtService);
-
-        return subRepository
-                .findSubscriptionBySubscriber(current.getUsername(), userToCheck.getUsername()).isPresent()
-                && subRepository
-                        .findSubscriptionBySubscriber(userToCheck.getUsername(), current.getUsername()).isPresent();
     }
 
 }

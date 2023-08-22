@@ -8,9 +8,7 @@ import java.util.function.Function;
 public class UserResponseMapper implements Function<User, UserResponse> {
     @Override
     public UserResponse apply(User user) {
-        return new UserResponse(
-                user.getUsername()
-        );
+        return new UserResponse(user.getUsername());
     }
 
 }

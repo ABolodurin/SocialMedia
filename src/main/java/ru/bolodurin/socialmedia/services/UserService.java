@@ -3,9 +3,7 @@ package ru.bolodurin.socialmedia.services;
 import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.security.JwtService;
 
-public interface UserService
-//        extends UserDetailsService
-{
+public interface UserService {
     User findByUsername(String username);
 
     void add(User user);

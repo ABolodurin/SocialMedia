@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,7 +14,7 @@ public class UserResponse {
     @ApiModelProperty(value = "Username")
     private String username;
 
-    public static UserResponse of(String username){
+    public static UserResponse of(String username) {
         return new UserResponse(username);
     }
 

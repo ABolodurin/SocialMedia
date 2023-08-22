@@ -15,4 +15,5 @@ public class PostResponseMapper implements Function<Post, PostResponse> {
                 post.getTimestamp()
         );
     }
+
 }

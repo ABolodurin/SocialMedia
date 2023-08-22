@@ -17,18 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bolodurin.socialmedia.configuration.SwaggerConfig;
-import ru.bolodurin.socialmedia.entities.PostResponse;
 import ru.bolodurin.socialmedia.entities.PostRequest;
+import ru.bolodurin.socialmedia.entities.PostResponse;
 import ru.bolodurin.socialmedia.services.PostService;
-
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/userposts")
 @Api(tags = {SwaggerConfig.POST_TAG})
-public class PostControllerImpl implements PostController{
+public class PostControllerImpl implements PostController {
     private final PostService postService;
+
     @ApiOperation(value = "Creates the user's post")
     @ApiResponses(value = @ApiResponse(code = 200, message = "Successful creation"))
 
@@ -53,7 +52,7 @@ public class PostControllerImpl implements PostController{
 
     @ApiOperation(value = "Deletes the user's post")
     @ApiResponses(value =
-            @ApiResponse(code = 200, message = "Successful delete"))
+    @ApiResponse(code = 200, message = "Successful delete"))
 
     @Override
     @DeleteMapping
