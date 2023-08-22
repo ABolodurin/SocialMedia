@@ -12,11 +12,13 @@ ___
 
 ## Описание
 ___
+### Иллюстрация UI
 <image
   src="/UI.png"
   alt="UI"
   caption="Иллюстрация UI">
-
+  
+### Иллюстрация DB
 <image
   src="/DB.png"
   alt="DB"
