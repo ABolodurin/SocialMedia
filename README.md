@@ -24,6 +24,10 @@ ___
   alt="DB"
   caption="Иллюстрация DB">
 
+### Документация из Swagger
+
+[/api-docs.json](https://github.com/ABolodurin/SocialMedia/blob/master/api-docs.json)
+
 ## Выполненные задачи
 ___
 
@@ -53,10 +57,13 @@ ___
   документация содержит форматы запросов и ответов,
   а также требования к аутентификации.
 
+### Тестирование
+- Часть проекта покрыта модульными тестами.
+
 ## TODO list
 ___
 
-- Unit tests
+- Увеличить покрытие проекта тестами
 - Создать для контроллеров обработчик ошибок запросов
   REST Error Exception Handler https://www.baeldung.com/exception-handling-for-rest-with-spring
 - Заполнить все заглушки исключений в сервисах
