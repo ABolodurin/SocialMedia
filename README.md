@@ -13,12 +13,12 @@ ___
 ## Описание
 ___
 <image
-  src="/UI.jpg"
+  src="/UI.png"
   alt="UI"
   caption="Иллюстрация UI">
 
 <image
-  src="/DB.jpg"
+  src="/DB.png"
   alt="DB"
   caption="Иллюстрация DB">
 
