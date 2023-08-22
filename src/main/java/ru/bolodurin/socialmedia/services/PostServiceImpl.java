@@ -25,7 +25,7 @@ public class PostServiceImpl implements PostService {
     public Optional<PostResponse> create(String authHeader, PostRequest post) {
         User user = userService.findUserByHeader(authHeader, jwtService);
 
-        postRepository.save(Post.builder().header(post.getHeader()).content(post.getContent()).user(user).build());
+        postRepository.save(new Post(post.getHeader(), post.getContent(), user));
 
         Post postedPost = postRepository.findByHeader(post.getHeader()).orElse((new Post()));
         return Optional.ofNullable(postResponseMapper.apply(postedPost));

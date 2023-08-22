@@ -15,12 +15,9 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Data
-@Builder //TODO custom
 @Entity
 @Table(name = "posts")
-public class Post
-//        implements Comparable<Post>
-{
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -36,7 +33,7 @@ public class Post
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    public Post(Long id, String header, String content, LocalDateTime timestamp, User user) {
+    public Post(String header, String content, User user) {
         this.header = header;
         this.content = content;
         this.timestamp = LocalDateTime.now();
@@ -47,8 +44,4 @@ public class Post
         this.timestamp = LocalDateTime.now();
     }
 
-//    @Override
-//    public int compareTo(Post o) {
-//       return o.timestamp.compareTo(this.timestamp);
-//    }
 }
