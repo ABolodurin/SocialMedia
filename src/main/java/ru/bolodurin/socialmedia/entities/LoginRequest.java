@@ -14,10 +14,10 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    @ApiModelProperty(notes = "User email")
+    @ApiModelProperty(notes = "User username")
     @NotEmpty
     @Email
-    private String email;
+    private String username;
     @ApiModelProperty(notes = "User password")
     @NotEmpty
     private String password;

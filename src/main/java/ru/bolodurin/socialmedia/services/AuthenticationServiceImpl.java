@@ -39,9 +39,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthResponse auth(LoginRequest request) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), request.getPassword()));
+                        request.getUsername(), request.getPassword()));
 
-        return getResponseFor(userService.findByEmail(request.getEmail()));
+        return getResponseFor(userService.findByUsername(request.getUsername()));
     }
 
     private AuthResponse getResponseFor(User user) {

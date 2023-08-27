@@ -9,14 +9,14 @@ import ru.bolodurin.socialmedia.security.JwtService;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
     public User findByUsername(String username) {
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("username not found" + username));
+                .orElseThrow(() -> new UsernameNotFoundException("username not found" + username));
     }
 
     @Override

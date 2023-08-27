@@ -1,15 +1,16 @@
 package ru.bolodurin.socialmedia.services;
 
 import ru.bolodurin.socialmedia.entities.SubsResponse;
+import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.entities.UserRequest;
 
 public interface SubsService {
-    SubsResponse subscribe(UserRequest userToSubscribe, String authHeader);
+    SubsResponse subscribe(UserRequest userToSubscribe, User user);
 
-    SubsResponse unsubscribe(UserRequest userToUnsubscribe, String authHeader);
+    SubsResponse unsubscribe(UserRequest userToUnsubscribe, User user);
 
-    SubsResponse getSubscriptions(String authHeader);
+    SubsResponse getSubscriptions(User user);
 
-    SubsResponse getSubscribers(String authHeader);
+    SubsResponse getSubscribers(User user);
 
 }

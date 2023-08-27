@@ -5,66 +5,54 @@ import org.springframework.stereotype.Service;
 import ru.bolodurin.socialmedia.entities.SubsResponse;
 import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.entities.UserRequest;
-import ru.bolodurin.socialmedia.entities.UserResponse;
 import ru.bolodurin.socialmedia.entities.UserResponseMapper;
 import ru.bolodurin.socialmedia.repositories.UserRepository;
-import ru.bolodurin.socialmedia.security.JwtService;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SubsServiceImpl implements SubsService {
     private final UserRepository userRepository;
-    private final JwtService jwtService;
     private final UserService userService;
     private final UserResponseMapper userResponseMapper;
 
     @Override
-    public SubsResponse subscribe(UserRequest userToSubscribe, String authHeader) {
-        User subscriber = userService.findUserByHeader(authHeader, jwtService);
+    public SubsResponse subscribe(UserRequest userToSubscribe, User user) {
         User subscription = userService.findByUsername(userToSubscribe.getUsername());
 
-        subscriber.getSubscriptions().add(subscription);
-        userRepository.save(subscriber);
+        user.getSubscriptions().add(subscription);
+        userRepository.save(user);
 
-        return this.getSubscriptions(authHeader);
+        return this.getSubscriptions(user);
     }
 
     @Override
-    public SubsResponse unsubscribe(UserRequest userToUnsubscribe, String authHeader) {
-        User subscriber = userService.findUserByHeader(authHeader, jwtService);
+    public SubsResponse unsubscribe(UserRequest userToUnsubscribe, User user) {
         User subscription = userService.findByUsername(userToUnsubscribe.getUsername());
 
-        subscriber.getSubscriptions().remove(subscription);
-        userRepository.save(subscriber);
+        user.getSubscriptions().remove(subscription);
+        userRepository.save(user);
 
-        return this.getSubscriptions(authHeader);
+        return this.getSubscriptions(user);
     }
 
     @Override
-    public SubsResponse getSubscriptions(String authHeader) {
-        List<UserResponse> subscriptions = new LinkedList<>();
-
-        userService
-                .findUserByHeader(authHeader, jwtService)
+    public SubsResponse getSubscriptions(User user) {
+        return new SubsResponse(user
                 .getSubscriptions()
-                .forEach(sub -> subscriptions.add(userResponseMapper.apply(sub)));
-
-        return new SubsResponse(subscriptions);
+                .stream()
+                .map(userResponseMapper)
+                .collect(Collectors.toList()));
     }
 
     @Override
-    public SubsResponse getSubscribers(String authHeader) {
-        List<UserResponse> subscribers = new LinkedList<>();
-
-        userService
-                .findUserByHeader(authHeader, jwtService)
+    public SubsResponse getSubscribers(User user) {
+        return new SubsResponse(user
                 .getSubscribers()
-                .forEach(sub -> subscribers.add(userResponseMapper.apply(sub)));
-
-        return new SubsResponse(subscribers);
+                .stream()
+                .map(userResponseMapper)
+                .collect(Collectors.toList()));
     }
 
 }

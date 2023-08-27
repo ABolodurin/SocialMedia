@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.bolodurin.socialmedia.configuration.SwaggerConfig;
 import ru.bolodurin.socialmedia.entities.PostRequest;
 import ru.bolodurin.socialmedia.entities.PostResponse;
+import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.security.JwtService;
 import ru.bolodurin.socialmedia.services.PostService;
+import ru.bolodurin.socialmedia.services.UserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ import ru.bolodurin.socialmedia.services.PostService;
 @Api(tags = {SwaggerConfig.POST_TAG})
 public class PostControllerImpl implements PostController {
     private final PostService postService;
+    private final JwtService jwtService;
+    private final UserService userService;
 
     @ApiOperation(value = "Creates the user's post")
     @ApiResponses(value = @ApiResponse(code = 200, message = "Successful creation"))
@@ -34,9 +39,12 @@ public class PostControllerImpl implements PostController {
     @Override
     @PostMapping
     public @ResponseBody ResponseEntity<Page<PostResponse>> createPost(
+            @RequestBody PostRequest post,
             @ApiParam(value = "\"Bearer \"+ autorization token")
-            @RequestHeader(value = "Authorization") String authHeader, @RequestBody PostRequest post) {
-        return ResponseEntity.ok(postService.create(authHeader, post));
+            @RequestHeader(value = "Authorization") String authHeader) {
+        User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
+
+        return ResponseEntity.ok(postService.create(user, post));
     }
 
     @ApiOperation(value = "Updates the user's post")
@@ -45,9 +53,12 @@ public class PostControllerImpl implements PostController {
     @Override
     @PutMapping
     public @ResponseBody ResponseEntity<Page<PostResponse>> updatePost(
+            @RequestBody PostResponse updatedPost,
             @ApiParam(value = "\"Bearer \"+ autorization token")
-            @RequestHeader(value = "Authorization") String authHeader, @RequestBody PostResponse updatedPost) {
-        return ResponseEntity.ok(postService.update(authHeader, updatedPost));
+            @RequestHeader(value = "Authorization") String authHeader) {
+        User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
+
+        return ResponseEntity.ok(postService.update(user, updatedPost));
     }
 
     @ApiOperation(value = "Deletes the user's post")
@@ -57,9 +68,12 @@ public class PostControllerImpl implements PostController {
     @Override
     @DeleteMapping
     public @ResponseBody ResponseEntity<Page<PostResponse>> deletePost(
+            @RequestBody PostResponse post,
             @ApiParam(value = "\"Bearer \"+ autorization token")
-            @RequestHeader(value = "Authorization") String authHeader, @RequestBody PostResponse post) {
-        return ResponseEntity.ok(postService.delete(authHeader, post));
+            @RequestHeader(value = "Authorization") String authHeader) {
+        User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
+
+        return ResponseEntity.ok(postService.delete(user, post));
     }
 
 }

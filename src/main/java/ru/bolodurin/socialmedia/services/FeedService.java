@@ -2,8 +2,9 @@ package ru.bolodurin.socialmedia.services;
 
 import org.springframework.data.domain.Page;
 import ru.bolodurin.socialmedia.entities.PostResponse;
+import ru.bolodurin.socialmedia.entities.User;
 
 public interface FeedService {
-    Page<PostResponse> getFeedForUser(String authToken);
+    Page<PostResponse> getFeedForUser(User user);
 
 }

@@ -5,6 +5,6 @@ import org.springframework.http.ResponseEntity;
 import ru.bolodurin.socialmedia.entities.PostResponse;
 
 public interface FeedController {
-    ResponseEntity<Page<PostResponse>> showFeed(String token);
+    ResponseEntity<Page<PostResponse>> showFeed(String authHeader);
 
 }

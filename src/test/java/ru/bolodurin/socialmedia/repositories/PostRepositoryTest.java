@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class PostRepositoryTest {
@@ -42,10 +41,11 @@ class PostRepositoryTest {
 
         userRepository.save(user);
     }
+
     @Test
     void postsShouldBeOrderedByTimestampDesc() throws InterruptedException {
         for (int i = 0; i < 5; i++) {
-            postRepository.save(new Post("header", "content", user));
+            postRepository.save(new Post("header" + i, "content" + i, user));
             Thread.sleep(10);
         }
 
@@ -55,7 +55,7 @@ class PostRepositoryTest {
 
         LocalDateTime later = LocalDateTime.now();
 
-        for (Post earlier: actual)  {
+        for (Post earlier : actual) {
             assertThat(earlier.getTimestamp()).isBefore(later);
             later = earlier.getTimestamp();
         }

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
     private static final int TOKEN_START_POSITION = 7; //"Bearer "
     private static final long EXPIRATION_TIME_MILLS = 1000 * 60 * 24; //24 hours
@@ -69,6 +71,10 @@ public class JwtService {
     private Key getSigninKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String extractLoginFromHeader(String authHeader) {
+        return extractLogin(getTokenFromHeader(authHeader));
     }
 
     public String getTokenFromHeader(String authHeader) {

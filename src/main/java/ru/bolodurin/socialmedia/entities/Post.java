@@ -1,6 +1,5 @@
 package ru.bolodurin.socialmedia.entities;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
 
@@ -28,8 +27,7 @@ public class Post {
     @Column(name = "content")
     private String content;
     @Column(name = "timestamp")
-    @Builder.Default
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private LocalDateTime timestamp;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 

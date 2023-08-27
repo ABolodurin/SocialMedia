@@ -16,15 +16,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bolodurin.socialmedia.configuration.SwaggerConfig;
 import ru.bolodurin.socialmedia.entities.SubsResponse;
+import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.entities.UserRequest;
+import ru.bolodurin.socialmedia.security.JwtService;
 import ru.bolodurin.socialmedia.services.SubsService;
+import ru.bolodurin.socialmedia.services.UserService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/subscriptions")
 @Api(tags = {SwaggerConfig.SUBS_TAG})
-public class SubscriptionsControllerImpl implements SubscriptionsController{
+public class SubscriptionsControllerImpl implements SubscriptionsController {
     private final SubsService subsService;
+    private final UserService userService;
+    private final JwtService jwtService;
+
     @ApiOperation(value = "Subscribe")
     @ApiResponses(value = @ApiResponse(code = 200, message = "Successful, returns subscriptions"))
 
@@ -34,7 +40,9 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
             @RequestBody UserRequest userToSubscribe,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
-        return ResponseEntity.ok(subsService.subscribe(userToSubscribe, authHeader));
+        User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
+
+        return ResponseEntity.ok(subsService.subscribe(userToSubscribe, user));
     }
 
     @ApiOperation(value = "Unsubscribe")
@@ -46,7 +54,9 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
             @RequestBody UserRequest userToUnsubscribe,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
-        return ResponseEntity.ok(subsService.unsubscribe(userToUnsubscribe, authHeader));
+        User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
+
+        return ResponseEntity.ok(subsService.unsubscribe(userToUnsubscribe, user));
     }
 
     @ApiOperation(value = "Get current subscriptions")
@@ -57,7 +67,9 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
     public @ResponseBody ResponseEntity<SubsResponse> getSubscriptions(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
-        return ResponseEntity.ok(subsService.getSubscriptions(authHeader));
+        User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
+
+        return ResponseEntity.ok(subsService.getSubscriptions(user));
     }
 
     @ApiOperation(value = "Get current subscribers")
@@ -68,7 +80,9 @@ public class SubscriptionsControllerImpl implements SubscriptionsController{
     public @ResponseBody ResponseEntity<SubsResponse> getSubscribers(
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
-        return ResponseEntity.ok(subsService.getSubscribers(authHeader));
+        User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
+
+        return ResponseEntity.ok(subsService.getSubscribers(user));
     }
 
 }
