@@ -16,11 +16,11 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class RegisterRequest {
     @ApiModelProperty(notes = "Username")
-    @NotEmpty
+    @NotEmpty(message = "Field must be not empty")
     private String username;
     @ApiModelProperty(notes = "User email, uses as auth login")
     @NotEmpty
-    @Email
+    @Email(message = "Please enter a valid email address")
     private String email;
     @ApiModelProperty(notes = "User password")
     @NotEmpty

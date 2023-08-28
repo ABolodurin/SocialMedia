@@ -1,8 +1,10 @@
 package ru.bolodurin.socialmedia.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import ru.bolodurin.socialmedia.entities.Code;
+import ru.bolodurin.socialmedia.entities.CommonException;
 import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.repositories.UserRepository;
 import ru.bolodurin.socialmedia.security.JwtService;
@@ -16,7 +18,12 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("username not found" + username));
+                .orElseThrow(() ->  CommonException
+                        .builder()
+                        .code(Code.USERNAME_NOT_FOUND)
+                        .message(username + " not found")
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .build());
     }
 
     @Override
@@ -33,9 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(String username, User updatedUser) {
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow();
+        User user = findByUsername(username);
 
         user.setEmail(updatedUser.getEmail());
         user.setPassword(updatedUser.getPassword());
@@ -47,9 +52,7 @@ public class UserServiceImpl implements UserService {
     public User findUserByHeader(String authHeader, JwtService jwtService) {
         String username = jwtService.extractLogin(
                 jwtService.getTokenFromHeader(authHeader));
-        return userRepository
-                .findByUsername(username)
-                .orElseThrow();
+        return findByUsername(username);
     }
 
 }
