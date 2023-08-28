@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
-    @ApiModelProperty(value = "Username")
+    @ApiModelProperty(value = "User username")
     private String username;
 
     public static UserResponse of(String username) {

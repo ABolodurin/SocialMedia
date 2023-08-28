@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
                 .findByUsername(username)
                 .orElseThrow(() ->  CommonException
                         .builder()
-                        .code(Code.USERNAME_NOT_FOUND)
+                        .code(Code.NOT_FOUND)
                         .message(username + " not found")
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .build());
@@ -44,6 +44,8 @@ public class UserServiceImpl implements UserService {
 
         user.setEmail(updatedUser.getEmail());
         user.setPassword(updatedUser.getPassword());
+        user.setSubscriptions(updatedUser.getSubscriptions());
+        user.setSubscribers(updatedUser.getSubscribers());
 
         userRepository.save(updatedUser);
     }

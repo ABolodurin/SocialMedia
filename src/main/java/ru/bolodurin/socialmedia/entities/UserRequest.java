@@ -1,5 +1,6 @@
 package ru.bolodurin.socialmedia.entities;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @Builder
 public class UserRequest {
+    @ApiModelProperty(notes = "User username")
     @NotEmpty
     private String username;
 

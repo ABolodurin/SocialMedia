@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostResponse implements Comparable<PostResponse>{
+public class PostResponse {
     @ApiModelProperty(notes = "Post ID")
     private Long id;
     @ApiModelProperty(notes = "Post header")
@@ -22,9 +22,4 @@ public class PostResponse implements Comparable<PostResponse>{
     @ApiModelProperty(notes = "Post content")
     private LocalDateTime timestamp;
 
-    @Override
-    public int compareTo(PostResponse o) {
-        return o.timestamp.compareTo(this.timestamp);
-    }
-    
 }
