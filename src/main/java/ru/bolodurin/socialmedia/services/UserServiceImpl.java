@@ -7,7 +7,6 @@ import ru.bolodurin.socialmedia.entities.Code;
 import ru.bolodurin.socialmedia.entities.CommonException;
 import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.repositories.UserRepository;
-import ru.bolodurin.socialmedia.security.JwtService;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return userRepository
                 .findByUsername(username)
-                .orElseThrow(() ->  CommonException
+                .orElseThrow(() -> CommonException
                         .builder()
                         .code(Code.NOT_FOUND)
                         .message(username + " not found")
@@ -31,12 +30,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public User findByEmail(String email) {
-        return userRepository
-                .findByEmail(email)
-                .orElseThrow();
-    }
 
     @Override
     public void update(String username, User updatedUser) {
@@ -48,13 +41,6 @@ public class UserServiceImpl implements UserService {
         user.setSubscribers(updatedUser.getSubscribers());
 
         userRepository.save(updatedUser);
-    }
-
-    @Override
-    public User findUserByHeader(String authHeader, JwtService jwtService) {
-        String username = jwtService.extractLogin(
-                jwtService.getTokenFromHeader(authHeader));
-        return findByUsername(username);
     }
 
 }

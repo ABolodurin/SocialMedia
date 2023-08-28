@@ -102,27 +102,4 @@ class UserRepositoryTest {
 
     }
 
-    @Test
-    void itShouldFindUserByEmail() {
-        User expected = user1;
-
-        userRepository.save(expected);
-
-        User actual = userRepository.findByEmail(email).orElseThrow();
-
-        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
-
-    }
-
-    @Test
-    void itShouldNotFindUserByEmailThatNotExists() {
-        String invalidUsername = "email";
-
-        assertThatThrownBy(() -> userRepository.findByEmail(invalidUsername)
-                .orElseThrow(() -> new UsernameNotFoundException(invalidUsername)))
-                .isInstanceOf(UsernameNotFoundException.class)
-                .hasMessageContaining(invalidUsername);
-
-    }
-
 }
