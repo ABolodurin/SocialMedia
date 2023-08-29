@@ -19,4 +19,6 @@ public interface PostService {
 
     Page<PostResponse> findByUser(User user);
 
+    PostResponse show(Long id);
+
 }

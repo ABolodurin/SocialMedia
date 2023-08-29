@@ -17,4 +17,8 @@ public class UserRequest {
     @NotEmpty
     private String username;
 
+    public static UserRequest of(String username) {
+        return new UserRequest(username);
+    }
+
 }

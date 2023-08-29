@@ -93,12 +93,12 @@ class UserRepositoryTest {
 
     @Test
     void itShouldNotFindUserByUsernameThatNotExists() {
-        String invalidUsername = "username";
+        String nonExistingUsername = "username";
 
-        assertThatThrownBy(() -> userRepository.findByUsername(invalidUsername)
-                .orElseThrow(() -> new UsernameNotFoundException(invalidUsername)))
+        assertThatThrownBy(() -> userRepository.findByUsername(nonExistingUsername)
+                .orElseThrow(() -> new UsernameNotFoundException(nonExistingUsername)))
                 .isInstanceOf(UsernameNotFoundException.class)
-                .hasMessageContaining(invalidUsername);
+                .hasMessageContaining(nonExistingUsername);
 
     }
 

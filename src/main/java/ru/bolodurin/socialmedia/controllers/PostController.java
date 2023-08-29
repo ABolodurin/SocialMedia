@@ -12,4 +12,6 @@ public interface PostController {
 
     ResponseEntity<Page<PostResponse>> deletePost(PostResponse post, String authHeader);
 
+    ResponseEntity<PostResponse> show(Long id);
+
 }

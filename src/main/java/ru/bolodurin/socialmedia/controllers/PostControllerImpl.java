@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,8 +64,7 @@ public class PostControllerImpl implements PostController {
     }
 
     @ApiOperation(value = "Deletes the user's post")
-    @ApiResponses(value =
-    @ApiResponse(code = 200, message = "Successful delete"))
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful delete"))
 
     @Override
     @DeleteMapping
@@ -74,6 +75,15 @@ public class PostControllerImpl implements PostController {
         User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
 
         return ResponseEntity.ok(postService.delete(user, post));
+    }
+
+    @ApiOperation(value = "Show post by id")
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))
+
+    @Override
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponse> show(@PathVariable(value = "id") Long id) {
+        return ResponseEntity.ok(postService.show(id));
     }
 
 }
