@@ -26,6 +26,8 @@ import ru.bolodurin.socialmedia.security.JwtService;
 import ru.bolodurin.socialmedia.services.PostService;
 import ru.bolodurin.socialmedia.services.UserService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/userposts")
@@ -41,7 +43,7 @@ public class PostControllerImpl implements PostController {
     @Override
     @PostMapping
     public @ResponseBody ResponseEntity<Page<PostResponse>> createPost(
-            @RequestBody PostRequest post,
+            @Valid @RequestBody PostRequest post,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
         User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
@@ -55,7 +57,7 @@ public class PostControllerImpl implements PostController {
     @Override
     @PutMapping
     public @ResponseBody ResponseEntity<Page<PostResponse>> updatePost(
-            @RequestBody PostResponse updatedPost,
+            @Valid @RequestBody PostResponse updatedPost,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
         User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
@@ -69,7 +71,7 @@ public class PostControllerImpl implements PostController {
     @Override
     @DeleteMapping
     public @ResponseBody ResponseEntity<Page<PostResponse>> deletePost(
-            @RequestBody PostResponse post,
+            @Valid @RequestBody PostResponse post,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
         User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));

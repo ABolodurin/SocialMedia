@@ -6,6 +6,7 @@ import ru.bolodurin.socialmedia.entities.SubsResponse;
 import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.entities.UserRequest;
 import ru.bolodurin.socialmedia.entities.UserResponseMapper;
+import ru.bolodurin.socialmedia.repositories.SubsRepository;
 
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 public class SubsServiceImpl implements SubsService {
     private final UserService userService;
     private final UserResponseMapper userResponseMapper;
+    private final SubsRepository subsRepository;
 
     @Override
     public SubsResponse subscribe(UserRequest userToSubscribe, User user) {
@@ -51,6 +53,11 @@ public class SubsServiceImpl implements SubsService {
                 .stream()
                 .map(userResponseMapper)
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public boolean isFriends(User user, User other) {
+        return subsRepository.checkIsFriends(user, other);
     }
 
 }

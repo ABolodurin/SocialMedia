@@ -11,13 +11,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "subscriptions")
+@Table(name = "subscriptions", uniqueConstraints = @UniqueConstraint(
+        name = "unique_sub", columnNames = {"subscription", "subscriber"}))
 public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

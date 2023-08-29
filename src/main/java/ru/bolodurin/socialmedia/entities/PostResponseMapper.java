@@ -8,12 +8,13 @@ import java.util.function.Function;
 public class PostResponseMapper implements Function<Post, PostResponse> {
     @Override
     public PostResponse apply(Post post) {
-        return new PostResponse(
-                post.getId(),
-                post.getHeader(),
-                post.getContent(),
-                post.getTimestamp()
-        );
+        return PostResponse
+                .builder()
+                .id(post.getId())
+                .header(post.getHeader())
+                .content(post.getContent())
+                .timestamp(post.getTimestamp())
+                .build();
     }
 
 }

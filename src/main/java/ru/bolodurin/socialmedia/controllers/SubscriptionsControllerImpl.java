@@ -22,6 +22,8 @@ import ru.bolodurin.socialmedia.security.JwtService;
 import ru.bolodurin.socialmedia.services.SubsService;
 import ru.bolodurin.socialmedia.services.UserService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/subscriptions")
@@ -37,7 +39,7 @@ public class SubscriptionsControllerImpl implements SubscriptionsController {
     @Override
     @PutMapping("/sub")
     public @ResponseBody ResponseEntity<SubsResponse> subscribe(
-            @RequestBody UserRequest userToSubscribe,
+            @Valid @RequestBody UserRequest userToSubscribe,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
         User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
@@ -51,7 +53,7 @@ public class SubscriptionsControllerImpl implements SubscriptionsController {
     @Override
     @PutMapping("/unsub")
     public @ResponseBody ResponseEntity<SubsResponse> unsubscribe(
-            @RequestBody UserRequest userToUnsubscribe,
+            @Valid @RequestBody UserRequest userToUnsubscribe,
             @ApiParam(value = "\"Bearer \"+ autorization token")
             @RequestHeader(value = "Authorization") String authHeader) {
         User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));

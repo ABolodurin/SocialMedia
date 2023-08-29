@@ -13,4 +13,6 @@ public interface SubsService {
 
     SubsResponse getSubscribers(User user);
 
+    boolean isFriends(User current, User consumer);
+
 }

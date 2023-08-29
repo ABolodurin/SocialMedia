@@ -17,6 +17,7 @@ public class SwaggerConfig {
     public static final String FEED_TAG = "User feed resource";
     public static final String POST_TAG = "User posts resource";
     public static final String SUBS_TAG = "User subscriptions resource";
+    public static final String MESSENGER_TAG = "Messenger resource";
 
     private ApiInfo metaInfo() {
         return new ApiInfo(

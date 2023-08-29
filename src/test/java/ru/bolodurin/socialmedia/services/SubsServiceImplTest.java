@@ -12,6 +12,7 @@ import ru.bolodurin.socialmedia.entities.User;
 import ru.bolodurin.socialmedia.entities.UserRequest;
 import ru.bolodurin.socialmedia.entities.UserResponse;
 import ru.bolodurin.socialmedia.entities.UserResponseMapper;
+import ru.bolodurin.socialmedia.repositories.SubsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +28,15 @@ class SubsServiceImplTest {
     private User user2;
     @Mock
     private UserService userService;
+    @Mock
+    private SubsRepository subsRepository;
     private UserResponseMapper userResponseMapper;
     private SubsService subsService;
 
     @BeforeEach
     void init() {
         userResponseMapper = new UserResponseMapper();
-        subsService = new SubsServiceImpl(userService, userResponseMapper);
+        subsService = new SubsServiceImpl(userService, userResponseMapper, subsRepository);
 
         user1 = User
                 .builder()
