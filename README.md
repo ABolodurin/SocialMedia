@@ -1,5 +1,5 @@
 # SocialMedia
-## Social Media Pet Project
+## Social Media Project
 ___
 
 ### Запуск
