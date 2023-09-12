@@ -126,4 +126,22 @@ class SubsServiceImplTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @Test
+    void shouldShowIsUserFriendToOther() {
+        User expected1 = user1;
+        User expected2 = user2;
+        subsService.isFriends(expected1, expected2);
+
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+
+        verify(subsRepository).checkIsFriends(userArgumentCaptor.capture(), userArgumentCaptor.capture());
+
+        User actual1 = userArgumentCaptor.getAllValues().get(0);
+        User actual2 = userArgumentCaptor.getAllValues().get(1);
+
+        assertThat(actual1).usingRecursiveComparison().isEqualTo(expected1);
+        assertThat(actual2).usingRecursiveComparison().isEqualTo(expected2);
+
+    }
+
 }

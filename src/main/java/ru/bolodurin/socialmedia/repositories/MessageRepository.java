@@ -15,9 +15,6 @@ import java.util.Optional;
 @Repository
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long>,
         JpaRepository<Message, Long> {
-
-    Optional<Page<Message>> findAllByProducer(User producer, Pageable pageable);
-
     @Query(value =
             "SELECT m FROM Message m WHERE " +
                     "(m.consumer = :sender AND m.producer = :receiver) " +

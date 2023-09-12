@@ -37,10 +37,7 @@ public class MessageServiceImpl implements MessageService {
         messageRepository.save(new Message(
                 current, consumer, message.getMessage()));
 
-        return messageRepository
-                .findAllByProducer(current, MessageService.DEFAULT_PAGEABLE)
-                .orElseThrow()
-                .map(messageResponseMapper);
+        return getChatWith(UserResponse.of(consumer.getUsername()), current);
     }
 
     @Override
@@ -48,7 +45,13 @@ public class MessageServiceImpl implements MessageService {
         User consumer = userService.findByUsername(userToChat.getUsername());
 
         return messageRepository.findChatBetween(user, consumer, MessageService.DEFAULT_PAGEABLE)
-                .orElseThrow()
+                .orElseThrow(() -> CommonException
+                        .builder()
+                        .code(Code.NOT_FOUND)
+                        .message("No messages found between " + user.getUsername() +
+                                " and " + consumer.getUsername())
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .build())
                 .map(messageResponseMapper);
     }
 

@@ -140,8 +140,7 @@ class PostServiceImplTest {
         Long expected = 1L;
         post.setUser(user);
 
-        when(postRepository.findById(1L))
-                .thenReturn(Optional.of(post));
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
 
         postService.show(expected);
 
