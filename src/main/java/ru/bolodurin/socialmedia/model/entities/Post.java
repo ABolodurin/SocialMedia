@@ -33,6 +33,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+
     public Post(String header, String content, User user) {
         this.header = header;
         this.content = content;

@@ -34,7 +34,6 @@ public class Message {
     @JoinColumn(name = "producer")
     private User consumer;
 
-
     public Message() {
         this.timestamp = LocalDateTime.now();
     }
