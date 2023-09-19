@@ -7,14 +7,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
-import ru.bolodurin.socialmedia.entities.CommonException;
-import ru.bolodurin.socialmedia.entities.Message;
-import ru.bolodurin.socialmedia.entities.MessageRequest;
-import ru.bolodurin.socialmedia.entities.MessageResponseMapper;
-import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.Role;
-import ru.bolodurin.socialmedia.entities.User;
-import ru.bolodurin.socialmedia.entities.UserResponse;
+import ru.bolodurin.socialmedia.model.entities.CommonException;
+import ru.bolodurin.socialmedia.model.entities.Message;
+import ru.bolodurin.socialmedia.model.dto.MessageRequest;
+import ru.bolodurin.socialmedia.model.mappers.MessageResponseMapper;
+import ru.bolodurin.socialmedia.model.entities.Post;
+import ru.bolodurin.socialmedia.model.entities.Role;
+import ru.bolodurin.socialmedia.model.entities.User;
+import ru.bolodurin.socialmedia.model.dto.UserResponse;
 import ru.bolodurin.socialmedia.repositories.MessageRepository;
 
 import java.util.ArrayList;
@@ -32,18 +32,20 @@ class MessageServiceImplTest {
     private User user1;
     private User user2;
     private Message message;
+    private MessageService messageService;
+
     @Mock
     private UserService userService;
     @Mock
     private MessageRepository messageRepository;
     @Mock
     private SubsService subsService;
-    private MessageService messageService;
 
     @BeforeEach
     void init() {
         messageService = new MessageServiceImpl(
                 userService, messageRepository, new MessageResponseMapper(), subsService);
+
         user1 = User
                 .builder()
                 .username("username1")
@@ -66,7 +68,7 @@ class MessageServiceImplTest {
                 .subscribers(new ArrayList<>())
                 .build();
 
-        message = new Message(user1, user2, "message");
+        message = new Message("message", user2, user1);
     }
 
     @Test

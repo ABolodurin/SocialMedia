@@ -5,11 +5,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.bolodurin.socialmedia.entities.AuthResponse;
-import ru.bolodurin.socialmedia.entities.LoginRequest;
-import ru.bolodurin.socialmedia.entities.RegisterRequest;
-import ru.bolodurin.socialmedia.entities.Role;
-import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.model.dto.AuthResponse;
+import ru.bolodurin.socialmedia.model.dto.LoginRequest;
+import ru.bolodurin.socialmedia.model.dto.RegisterRequest;
+import ru.bolodurin.socialmedia.model.entities.Role;
+import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.security.JwtService;
 
 @Service

@@ -4,26 +4,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.Role;
-import ru.bolodurin.socialmedia.entities.User;
-import ru.bolodurin.socialmedia.services.PostService;
+import ru.bolodurin.socialmedia.model.entities.Post;
+import ru.bolodurin.socialmedia.model.entities.Role;
+import ru.bolodurin.socialmedia.model.entities.User;
+import ru.bolodurin.socialmedia.services.PostServiceImpl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class FeedRepositoryTest {
-    private static final String username = "username1";
-    private static final String email = "email@mail.com";
     private static final String password = "password";
     private static final Role role = Role.USER;
-    private static User user2;
-    private static User user3;
-    private static User user1;
+    private User user1;
+    private User user2;
+    private User user3;
 
     @Autowired
     private FeedRepository feedRepository;
@@ -37,32 +35,32 @@ class FeedRepositoryTest {
         user2 = User
                 .builder()
                 .username("username2")
-                .email("email1@mail.com")
+                .email("email2@mail.com")
                 .password(password)
                 .role(role)
-                .posts(new ArrayList<>())
-                .subscriptions(new ArrayList<>())
-                .subscribers(new ArrayList<>())
+                .posts(Collections.emptyList())
+                .subscriptions(Collections.emptyList())
+                .subscribers(Collections.emptyList())
                 .build();
 
         user3 = User
                 .builder()
                 .username("username3")
-                .email("email2@mail.com")
+                .email("email3@mail.com")
                 .password(password)
                 .role(role)
-                .posts(new ArrayList<>())
-                .subscriptions(new ArrayList<>())
-                .subscribers(new ArrayList<>())
+                .posts(Collections.emptyList())
+                .subscriptions(Collections.emptyList())
+                .subscribers(Collections.emptyList())
                 .build();
 
         user1 = User
                 .builder()
-                .username(username)
-                .email(email)
+                .username("username1")
+                .email("email1@mail.com")
                 .password(password)
                 .role(role)
-                .posts(new ArrayList<>())
+                .posts(Collections.emptyList())
                 .subscriptions(List.of(user2))
                 .subscribers(List.of(user3))
                 .build();
@@ -84,7 +82,7 @@ class FeedRepositoryTest {
         postRepository.save(new Post("header4", "content4", subscription));
 
         List<Post> actual = feedRepository
-                .findPostsBySubscriptionsFromUser(subscriber, PostService.DEFAULT_PAGEABLE)
+                .findPostsBySubscriptionsFromUser(subscriber, PostServiceImpl.DEFAULT_PAGEABLE)
                 .orElseThrow()
                 .getContent();
 
@@ -105,7 +103,7 @@ class FeedRepositoryTest {
         }
 
         List<Post> actual = feedRepository
-                .findPostsBySubscriptionsFromUser(subscriber, PostService.DEFAULT_PAGEABLE)
+                .findPostsBySubscriptionsFromUser(subscriber, PostServiceImpl.DEFAULT_PAGEABLE)
                 .orElseThrow()
                 .getContent();
 

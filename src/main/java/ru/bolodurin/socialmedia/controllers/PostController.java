@@ -2,8 +2,8 @@ package ru.bolodurin.socialmedia.controllers;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import ru.bolodurin.socialmedia.entities.PostRequest;
-import ru.bolodurin.socialmedia.entities.PostResponse;
+import ru.bolodurin.socialmedia.model.dto.PostRequest;
+import ru.bolodurin.socialmedia.model.dto.PostResponse;
 
 public interface PostController {
     ResponseEntity<Page<PostResponse>> createPost(PostRequest post, String authHeader);

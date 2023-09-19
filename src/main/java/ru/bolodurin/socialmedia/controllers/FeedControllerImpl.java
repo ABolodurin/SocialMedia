@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bolodurin.socialmedia.configuration.SwaggerConfig;
-import ru.bolodurin.socialmedia.entities.PostResponse;
-import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.model.dto.PostResponse;
+import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.security.JwtService;
 import ru.bolodurin.socialmedia.services.FeedService;
 import ru.bolodurin.socialmedia.services.UserService;
@@ -29,13 +29,12 @@ public class FeedControllerImpl implements FeedController {
     private final UserService userService;
     private final JwtService jwtService;
 
-    @ApiOperation(value = "Shows feed for current user")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful creation"))
-
     @Override
     @GetMapping
+    @ApiOperation(value = "Shows feed for current user")
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful creation"))
     public @ResponseBody ResponseEntity<Page<PostResponse>> showFeed(
-            @ApiParam(value = "\"Bearer \"+ autorization token")
+            @ApiParam(value = SwaggerConfig.AUTH_ANNOTATION)
             @RequestHeader(value = "Authorization") String authHeader) {
         User user = userService.findByUsername(jwtService.extractLoginFromHeader(authHeader));
 

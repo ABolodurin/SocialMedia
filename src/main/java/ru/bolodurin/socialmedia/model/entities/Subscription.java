@@ -1,4 +1,4 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

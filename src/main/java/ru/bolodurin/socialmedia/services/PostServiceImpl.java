@@ -2,20 +2,23 @@ package ru.bolodurin.socialmedia.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.bolodurin.socialmedia.entities.Code;
-import ru.bolodurin.socialmedia.entities.CommonException;
-import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.PostRequest;
-import ru.bolodurin.socialmedia.entities.PostResponse;
-import ru.bolodurin.socialmedia.entities.PostResponseMapper;
-import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.model.dto.PostRequest;
+import ru.bolodurin.socialmedia.model.dto.PostResponse;
+import ru.bolodurin.socialmedia.model.entities.Code;
+import ru.bolodurin.socialmedia.model.entities.CommonException;
+import ru.bolodurin.socialmedia.model.entities.Post;
+import ru.bolodurin.socialmedia.model.entities.User;
+import ru.bolodurin.socialmedia.model.mappers.PostResponseMapper;
 import ru.bolodurin.socialmedia.repositories.PostRepository;
 
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
+    public static final Pageable DEFAULT_PAGEABLE = PageRequest.of(0, 10, Sort.by("timestamp").descending());
     private final PostRepository postRepository;
     private final PostResponseMapper postResponseMapper;
 
@@ -34,7 +37,6 @@ public class PostServiceImpl implements PostService {
                 .builder()
                 .code(Code.UPDATE_NON_OWN_ENTITY_ERROR)
                 .message("You can't update post which is not yours. PostID: " + post.getId())
-                .httpStatus(HttpStatus.BAD_REQUEST)
                 .build();
 
         post.setHeader(updatedPost.getHeader());
@@ -52,7 +54,6 @@ public class PostServiceImpl implements PostService {
                 .builder()
                 .code(Code.UPDATE_NON_OWN_ENTITY_ERROR)
                 .message("You can't delete post which is not yours. PostID: " + post.getId())
-                .httpStatus(HttpStatus.BAD_REQUEST)
                 .build();
 
         postRepository.deleteById(post.getId());
@@ -67,19 +68,17 @@ public class PostServiceImpl implements PostService {
                         .builder()
                         .code(Code.NOT_FOUND)
                         .message("Post not found. PostID: " + id)
-                        .httpStatus(HttpStatus.BAD_REQUEST)
                         .build());
     }
 
     @Override
     public Page<PostResponse> findByUser(User user) {
         return postRepository
-                .findAllByUserOrderByTimestampDesc(user, PostService.DEFAULT_PAGEABLE)
+                .findAllByUserOrderByTimestampDesc(user, DEFAULT_PAGEABLE)
                 .orElseThrow(() -> CommonException
                         .builder()
                         .code(Code.NOT_FOUND)
                         .message("No posts found for the user " + user.getUsername())
-                        .httpStatus(HttpStatus.BAD_REQUEST)
                         .build())
                 .map(postResponseMapper);
     }

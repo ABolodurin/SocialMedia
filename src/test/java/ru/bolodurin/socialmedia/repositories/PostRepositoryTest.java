@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
-import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.Role;
-import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.model.entities.Post;
+import ru.bolodurin.socialmedia.model.entities.Role;
+import ru.bolodurin.socialmedia.model.entities.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ class PostRepositoryTest {
     private static final String email = "email@mail.com";
     private static final String password = "password";
     private static final Role role = Role.USER;
-    private static User user;
+    private User user;
 
     @Autowired
     private UserRepository userRepository;

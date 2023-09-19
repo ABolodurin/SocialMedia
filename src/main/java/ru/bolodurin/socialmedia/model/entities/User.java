@@ -1,9 +1,8 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +42,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    @ToString.Exclude
     private List<Post> posts;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -91,7 +89,7 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return this.username;
+        return this.email;
     }
 
 }

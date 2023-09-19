@@ -1,4 +1,4 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.entities;
 
 public enum Code {
     REQUEST_VALIDATION_ERROR,
@@ -7,6 +7,7 @@ public enum Code {
     AUTHENTICATION_ERROR,
     FEED_IS_EMPTY,
     UPDATE_NON_OWN_ENTITY_ERROR,
+    ALREADY_DONE,
     NOT_FRIENDS
 
 }

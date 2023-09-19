@@ -7,12 +7,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
-import ru.bolodurin.socialmedia.entities.CommonException;
-import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.PostRequest;
-import ru.bolodurin.socialmedia.entities.PostResponse;
-import ru.bolodurin.socialmedia.entities.PostResponseMapper;
-import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.model.entities.CommonException;
+import ru.bolodurin.socialmedia.model.entities.Post;
+import ru.bolodurin.socialmedia.model.dto.PostRequest;
+import ru.bolodurin.socialmedia.model.dto.PostResponse;
+import ru.bolodurin.socialmedia.model.mappers.PostResponseMapper;
+import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.repositories.PostRepository;
 
 import java.util.List;
@@ -26,11 +26,12 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
-    private static Post post;
-    private static User user;
+    private Post post;
+    private User user;
+    private PostService postService;
+
     @Mock
     private PostRepository postRepository;
-    private PostService postService;
 
     @BeforeEach
     void init() {

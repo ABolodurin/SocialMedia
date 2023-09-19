@@ -2,7 +2,7 @@ package ru.bolodurin.socialmedia.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.model.entities.User;
 
 import java.util.Optional;
 

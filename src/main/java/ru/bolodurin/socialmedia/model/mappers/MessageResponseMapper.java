@@ -1,6 +1,8 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.mappers;
 
 import org.springframework.stereotype.Component;
+import ru.bolodurin.socialmedia.model.entities.Message;
+import ru.bolodurin.socialmedia.model.dto.MessageResponse;
 
 import java.util.function.Function;
 

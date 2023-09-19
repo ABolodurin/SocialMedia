@@ -1,4 +1,4 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -6,20 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageResponse {
-    @ApiModelProperty(notes = "Producer username")
-    private String from;
+public class MessageRequest {
     @ApiModelProperty(notes = "Consumer username")
-    private String to;
+    private String consumer;
     @ApiModelProperty(notes = "Message content")
     private String message;
-    @ApiModelProperty(notes = "Message timestamp")
-    private LocalDateTime timestamp;
 
 }

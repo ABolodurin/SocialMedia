@@ -7,11 +7,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
-import ru.bolodurin.socialmedia.entities.CommonException;
-import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.PostResponseMapper;
-import ru.bolodurin.socialmedia.entities.Role;
-import ru.bolodurin.socialmedia.entities.User;
+import ru.bolodurin.socialmedia.model.entities.CommonException;
+import ru.bolodurin.socialmedia.model.entities.Post;
+import ru.bolodurin.socialmedia.model.mappers.PostResponseMapper;
+import ru.bolodurin.socialmedia.model.entities.Role;
+import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.repositories.FeedRepository;
 
 import java.util.List;
@@ -25,10 +25,11 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FeedServiceImplTest {
-    private static User user;
+    private User user;
+    private FeedService feedService;
+
     @Mock
     private FeedRepository feedRepository;
-    private FeedService feedService;
 
 
     @BeforeEach

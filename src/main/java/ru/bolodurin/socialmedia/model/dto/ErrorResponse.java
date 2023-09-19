@@ -1,8 +1,9 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
+import ru.bolodurin.socialmedia.model.entities.Code;
 
 @Data
 @Builder

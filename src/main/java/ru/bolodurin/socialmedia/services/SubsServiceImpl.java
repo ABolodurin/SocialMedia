@@ -1,11 +1,14 @@
 package ru.bolodurin.socialmedia.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import ru.bolodurin.socialmedia.entities.SubsResponse;
-import ru.bolodurin.socialmedia.entities.User;
-import ru.bolodurin.socialmedia.entities.UserRequest;
-import ru.bolodurin.socialmedia.entities.UserResponseMapper;
+import ru.bolodurin.socialmedia.model.dto.SubsResponse;
+import ru.bolodurin.socialmedia.model.dto.UserRequest;
+import ru.bolodurin.socialmedia.model.entities.Code;
+import ru.bolodurin.socialmedia.model.entities.CommonException;
+import ru.bolodurin.socialmedia.model.entities.User;
+import ru.bolodurin.socialmedia.model.mappers.UserResponseMapper;
 import ru.bolodurin.socialmedia.repositories.SubsRepository;
 
 import java.util.stream.Collectors;
@@ -22,7 +25,16 @@ public class SubsServiceImpl implements SubsService {
         User subscription = userService.findByUsername(userToSubscribe.getUsername());
 
         user.getSubscriptions().add(subscription);
-        userService.update(user.getUsername(), user);
+
+        try {
+            userService.update(user.getUsername(), user);
+        } catch (DataIntegrityViolationException e) {
+            throw CommonException
+                    .builder()
+                    .code(Code.ALREADY_DONE)
+                    .message(userToSubscribe.getUsername() + " is already your friend")
+                    .build();
+        }
 
         return getSubscriptions(user);
     }

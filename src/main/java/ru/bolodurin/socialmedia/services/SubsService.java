@@ -1,8 +1,8 @@
 package ru.bolodurin.socialmedia.services;
 
-import ru.bolodurin.socialmedia.entities.SubsResponse;
-import ru.bolodurin.socialmedia.entities.User;
-import ru.bolodurin.socialmedia.entities.UserRequest;
+import ru.bolodurin.socialmedia.model.dto.SubsResponse;
+import ru.bolodurin.socialmedia.model.dto.UserRequest;
+import ru.bolodurin.socialmedia.model.entities.User;
 
 public interface SubsService {
     SubsResponse subscribe(UserRequest userToSubscribe, User user);

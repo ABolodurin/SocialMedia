@@ -9,15 +9,16 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 @Configuration
 public class SwaggerConfig {
     public static final String AUTH_TAG = "User authorization resource";
     public static final String FEED_TAG = "User feed resource";
-    public static final String POST_TAG = "User posts resource";
+    public static final String USER_POSTS_TAG = "User posts resource";
     public static final String SUBS_TAG = "User subscriptions resource";
     public static final String MESSENGER_TAG = "Messenger resource";
+    public static final String AUTH_ANNOTATION = "\"Bearer \"+ autorization token";
 
     private ApiInfo metaInfo() {
         return new ApiInfo(
@@ -27,7 +28,7 @@ public class SwaggerConfig {
                 null,
                 new Contact("Aleksandr Bolodurin", "https://t.me/bandit26", "shur026@yandex.ru"),
                 null,
-                null, new ArrayList<>());
+                null, Collections.emptyList());
     }
 
     @Bean

@@ -1,6 +1,7 @@
 package ru.bolodurin.socialmedia.configuration;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,15 +25,10 @@ import ru.bolodurin.socialmedia.security.JwtAuthFilter;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private static final String[] WHITELIST = {
-            "/register",
-            "/login",
-            "/swagger-resources/**",
-            "/swagger-ui/**",
-            "/v2/api-docs",
-            "/webjars/**"};
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
+    @Value("${application.security.whitelist}")
+    private String[] whitelist;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -60,7 +56,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .antMatchers(WHITELIST)
+                .antMatchers(whitelist)
                 .permitAll()
                 .anyRequest()
                 .authenticated()

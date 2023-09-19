@@ -6,12 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.bolodurin.socialmedia.entities.Post;
-import ru.bolodurin.socialmedia.entities.Role;
-import ru.bolodurin.socialmedia.entities.User;
-import ru.bolodurin.socialmedia.entities.UserRequest;
-import ru.bolodurin.socialmedia.entities.UserResponse;
-import ru.bolodurin.socialmedia.entities.UserResponseMapper;
+import ru.bolodurin.socialmedia.model.dto.UserRequest;
+import ru.bolodurin.socialmedia.model.dto.UserResponse;
+import ru.bolodurin.socialmedia.model.entities.Post;
+import ru.bolodurin.socialmedia.model.entities.Role;
+import ru.bolodurin.socialmedia.model.entities.User;
+import ru.bolodurin.socialmedia.model.mappers.UserResponseMapper;
 import ru.bolodurin.socialmedia.repositories.SubsRepository;
 
 import java.util.ArrayList;
@@ -26,12 +26,13 @@ import static org.mockito.Mockito.when;
 class SubsServiceImplTest {
     private User user1;
     private User user2;
+    private UserResponseMapper userResponseMapper;
+    private SubsService subsService;
+
     @Mock
     private UserService userService;
     @Mock
     private SubsRepository subsRepository;
-    private UserResponseMapper userResponseMapper;
-    private SubsService subsService;
 
     @BeforeEach
     void init() {
@@ -141,7 +142,6 @@ class SubsServiceImplTest {
 
         assertThat(actual1).usingRecursiveComparison().isEqualTo(expected1);
         assertThat(actual2).usingRecursiveComparison().isEqualTo(expected2);
-
     }
 
 }

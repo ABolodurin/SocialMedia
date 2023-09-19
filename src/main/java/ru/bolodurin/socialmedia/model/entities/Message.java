@@ -1,45 +1,49 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.entities;
 
 import lombok.Data;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "messages")
+public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column
     private Long id;
-    @Column(name = "header")
-    private String header;
-    @Setter
-    @Column(name = "content")
-    private String content;
+
+    @Column
+    private String message;
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
-    public Post(String header, String content, User user) {
-        this.header = header;
-        this.content = content;
+    @ManyToOne
+    @JoinColumn(name = "consumer")
+    private User producer;
+
+    @ManyToOne
+    @JoinColumn(name = "producer")
+    private User consumer;
+
+
+    public Message() {
         this.timestamp = LocalDateTime.now();
-        this.user = user;
     }
 
-    public Post() {
+    public Message(String message, User consumer, User producer) {
+        this.message = message;
         this.timestamp = LocalDateTime.now();
+        this.producer = producer;
+        this.consumer = consumer;
     }
 
 }

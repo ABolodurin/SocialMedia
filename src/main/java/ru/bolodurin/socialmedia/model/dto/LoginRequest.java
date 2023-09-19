@@ -1,4 +1,4 @@
-package ru.bolodurin.socialmedia.entities;
+package ru.bolodurin.socialmedia.model.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -18,6 +18,7 @@ public class LoginRequest {
     @NotEmpty
     @Email
     private String username;
+
     @ApiModelProperty(notes = "User password")
     @NotEmpty
     private String password;

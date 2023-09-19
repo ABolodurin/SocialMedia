@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bolodurin.socialmedia.configuration.SwaggerConfig;
-import ru.bolodurin.socialmedia.entities.AuthResponse;
-import ru.bolodurin.socialmedia.entities.LoginRequest;
-import ru.bolodurin.socialmedia.entities.RegisterRequest;
+import ru.bolodurin.socialmedia.model.dto.AuthResponse;
+import ru.bolodurin.socialmedia.model.dto.LoginRequest;
+import ru.bolodurin.socialmedia.model.dto.RegisterRequest;
 import ru.bolodurin.socialmedia.services.AuthenticationService;
 
 import javax.validation.Valid;
@@ -26,21 +26,19 @@ import javax.validation.Valid;
 public class AuthControllerImpl implements AuthController {
     private final AuthenticationService authService;
 
-    @ApiOperation(value = "Receives registration form and returns bearer token")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful registration"))
-
     @Override
     @PostMapping("/register")
+    @ApiOperation(value = "Receives registration form and returns bearer token")
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful registration"))
     public @ResponseBody ResponseEntity<AuthResponse> register(
             @Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
-    @ApiOperation(value = "Receives login form and returns bearer token")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful login"))
-
     @Override
     @PostMapping("/login")
+    @ApiOperation(value = "Receives login form and returns bearer token")
+    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful login"))
     public @ResponseBody ResponseEntity<AuthResponse> login(
             @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.auth(request));
