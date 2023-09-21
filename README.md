@@ -2,7 +2,7 @@
   SocialMedia
 </h1>
 
-## This project implements some features for modern social media API's
+## This project implements some features for modern social media APIs
 
 ## Stack
 
@@ -27,7 +27,7 @@
 - Run the application
 - Swagger UI path ```localhost:8080/swagger-ui/```
 
-DB migration is not required, Hibernate do it automatically.
+DB migration is not required, Hibernate does it automatically.
 
 Localhost ports customization: ```src/main/resources/application.properties```
 
@@ -51,10 +51,10 @@ caption="Иллюстрация DB">
 
 ###	Authentication and authorization
 
-- Users can register by username, email and password
+- Users can register by username, email, and password
   and login by username and password
-- API implemented authentication using the JWT token
-- The password is stored in a database as a hash
+- API uses JWT token authorization
+- The database stores hashed passwords
 
 ###	Posts
 
@@ -71,14 +71,14 @@ Post contains
 ###	User interaction
 
 - Users can subscribe to other users.
-  The user remains a subscriber until he himself unsubscribes
-- If two users are subscribed on top of each other, they can chat.
-- Chat sorted by the timestamp of the messages(newer is above)
+  Such users remain as subscribers until they unsubscribe
+- If two users subscribed to each other they can chat.
+- Chat sorted by the timestamp of the messages(most recent is above)
 
 ###	Feed
 
-- The feed shows the last posts of the subscriptions
-- The feed supports paging and sorting by the timestamp of the posts
+- Feed shows the latest posts of user's subscriptions
+- Feed supports paging and sorting by timestamp of the posts
 
 ### Error Handling and data validation
 
