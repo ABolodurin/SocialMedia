@@ -1,9 +1,9 @@
 package ru.bolodurin.socialmedia.controllers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,25 +18,24 @@ import ru.bolodurin.socialmedia.model.dto.UserRequest;
 import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.services.SubsService;
 import ru.bolodurin.socialmedia.services.UserService;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/subscriptions")
-@Api(tags = {SwaggerConfig.SUBS_TAG})
+@Tag(name = SwaggerConfig.SUBS_TAG)
 public class SubscriptionsControllerImpl implements SubscriptionsController {
     private final SubsService subsService;
     private final UserService userService;
 
     @Override
     @PutMapping("/sub")
-    @ApiOperation(value = "Subscribe")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful, returns subscriptions"))
+    @Operation(summary = "Subscribe",
+            responses = @ApiResponse(responseCode = "200", description = "Successful, returns subscriptions"))
     public @ResponseBody ResponseEntity<SubsResponse> subscribe(
-            @Valid @RequestBody UserRequest userToSubscribe, @ApiIgnore Principal principal) {
+            @Valid @RequestBody UserRequest userToSubscribe, @Parameter(hidden = true) Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         return ResponseEntity.ok(subsService.subscribe(userToSubscribe, user));
@@ -44,10 +43,10 @@ public class SubscriptionsControllerImpl implements SubscriptionsController {
 
     @Override
     @PutMapping("/unsub")
-    @ApiOperation(value = "Unsubscribe")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful, returns subscriptions"))
+    @Operation(summary = "Unsubscribe",
+            responses = @ApiResponse(responseCode = "200", description = "Successful, returns subscriptions"))
     public @ResponseBody ResponseEntity<SubsResponse> unsubscribe(
-            @Valid @RequestBody UserRequest userToUnsubscribe, @ApiIgnore Principal principal) {
+            @Valid @RequestBody UserRequest userToUnsubscribe, @Parameter(hidden = true) Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         return ResponseEntity.ok(subsService.unsubscribe(userToUnsubscribe, user));
@@ -55,9 +54,9 @@ public class SubscriptionsControllerImpl implements SubscriptionsController {
 
     @Override
     @GetMapping("/subscriptions")
-    @ApiOperation(value = "Get current subscriptions")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful"))
-    public @ResponseBody ResponseEntity<SubsResponse> getSubscriptions(@ApiIgnore Principal principal) {
+    @Operation(summary = "Get current subscriptions",
+            responses = @ApiResponse(responseCode = "200", description = "Successful"))
+    public @ResponseBody ResponseEntity<SubsResponse> getSubscriptions(@Parameter(hidden = true) Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         return ResponseEntity.ok(subsService.getSubscriptions(user));
@@ -65,9 +64,9 @@ public class SubscriptionsControllerImpl implements SubscriptionsController {
 
     @Override
     @GetMapping("/subscribers")
-    @ApiOperation(value = "Get current subscribers")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful"))
-    public @ResponseBody ResponseEntity<SubsResponse> getSubscribers(@ApiIgnore Principal principal) {
+    @Operation(summary = "Get current subscribers",
+            responses = @ApiResponse(responseCode = "200", description = "Successful"))
+    public @ResponseBody ResponseEntity<SubsResponse> getSubscribers(@Parameter(hidden = true) Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         return ResponseEntity.ok(subsService.getSubscribers(user));

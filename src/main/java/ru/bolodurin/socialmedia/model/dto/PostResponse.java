@@ -1,25 +1,25 @@
 package ru.bolodurin.socialmedia.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 public class PostResponse {
-    @ApiModelProperty(notes = "Post ID")
+    @Schema(description = "Post ID")
     @NotEmpty
     private Long id;
-    @ApiModelProperty(notes = "Post header")
+    @Schema(description = "Post header")
     @NotEmpty
     private String header;
-    @ApiModelProperty(notes = "Post content")
+    @Schema(description = "Post content")
     @NotEmpty
     private String content;
-    @ApiModelProperty(notes = "Post timestamp")
+    @Schema(description = "Post timestamp")
     @NotEmpty
     private LocalDateTime timestamp;
 

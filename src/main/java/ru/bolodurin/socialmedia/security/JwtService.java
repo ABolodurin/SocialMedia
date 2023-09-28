@@ -20,7 +20,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtService {
     private static final int TOKEN_START_POSITION = 7; //"Bearer "
-    private static final long EXPIRATION_TIME_MILLS = 1000 * 60 * 24; //24 hours
+    private static final long EXPIRATION_TIME_MILLS = 1000 * 60 * 60 * 24; //24 hours
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
