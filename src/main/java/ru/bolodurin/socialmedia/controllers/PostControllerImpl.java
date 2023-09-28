@@ -1,9 +1,9 @@
 package ru.bolodurin.socialmedia.controllers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -22,25 +22,24 @@ import ru.bolodurin.socialmedia.model.dto.PostResponse;
 import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.services.PostService;
 import ru.bolodurin.socialmedia.services.UserService;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/userposts")
-@Api(tags = {SwaggerConfig.USER_POSTS_TAG})
+@Tag(name = SwaggerConfig.USER_POSTS_TAG)
 public class PostControllerImpl implements PostController {
     private final PostService postService;
     private final UserService userService;
 
     @Override
     @PostMapping
-    @ApiOperation(value = "Creates the user's post")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful creation"))
+    @Operation(summary = "Creates the user's post",
+            responses = @ApiResponse(responseCode = "200", description = "Successful creation"))
     public @ResponseBody ResponseEntity<Page<PostResponse>> createPost(
-            @Valid @RequestBody PostRequest post, @ApiIgnore Principal principal) {
+            @Valid @RequestBody PostRequest post, @Parameter(hidden = true) Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         return ResponseEntity.ok(postService.create(user, post));
@@ -48,10 +47,10 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @PutMapping
-    @ApiOperation(value = "Updates the user's post")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful update"))
+    @Operation(summary = "Updates the user's post",
+            responses = @ApiResponse(responseCode = "200", description = "Successful update"))
     public @ResponseBody ResponseEntity<Page<PostResponse>> updatePost(
-            @Valid @RequestBody PostResponse updatedPost, @ApiIgnore Principal principal) {
+            @Valid @RequestBody PostResponse updatedPost, @Parameter(hidden = true) Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         return ResponseEntity.ok(postService.update(user, updatedPost));
@@ -59,10 +58,10 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @DeleteMapping
-    @ApiOperation(value = "Deletes the user's post")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful delete"))
+    @Operation(summary = "Deletes the user's post",
+            responses = @ApiResponse(responseCode = "200", description = "Successful delete"))
     public @ResponseBody ResponseEntity<Page<PostResponse>> deletePost(
-            @Valid @RequestBody PostResponse post, @ApiIgnore Principal principal) {
+            @Valid @RequestBody PostResponse post, @Parameter(hidden = true) Principal principal) {
         User user = userService.findByUsername(principal.getName());
 
         return ResponseEntity.ok(postService.delete(user, post));
@@ -70,8 +69,8 @@ public class PostControllerImpl implements PostController {
 
     @Override
     @GetMapping("/{id}")
-    @ApiOperation(value = "Show post by id")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Success"))
+    @Operation(summary = "Show post by id",
+            responses = @ApiResponse(responseCode = "200", description = "Success"))
     public ResponseEntity<PostResponse> show(@PathVariable(value = "id") Long id) {
         return ResponseEntity.ok(postService.show(id));
     }

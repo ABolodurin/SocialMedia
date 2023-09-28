@@ -1,6 +1,6 @@
 package ru.bolodurin.socialmedia.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class SubsResponse {
-    @ApiModelProperty(notes = "List of subscriptions/subscribers")
+    @Schema(description = "List of subscriptions/subscribers")
     private List<UserResponse> users;
 
     public SubsResponse() {
