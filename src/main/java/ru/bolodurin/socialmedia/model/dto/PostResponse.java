@@ -1,6 +1,8 @@
 package ru.bolodurin.socialmedia.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostResponse {
     @Schema(description = "Post ID")
-    @NotEmpty
+    @Min(value = 1L)
     private Long id;
     @Schema(description = "Post header")
     @NotEmpty
@@ -20,7 +22,7 @@ public class PostResponse {
     @NotEmpty
     private String content;
     @Schema(description = "Post timestamp")
-    @NotEmpty
+    @NotNull
     private LocalDateTime timestamp;
 
 }
