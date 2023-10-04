@@ -33,8 +33,6 @@
   alt="form"
   caption="form">
 
-DB migration is not required, Hibernate does it automatically.
-
 Localhost ports customization: ```src/main/resources/application.properties```
 
 ### UI

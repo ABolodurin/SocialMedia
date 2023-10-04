@@ -1,0 +1,135 @@
+databaseChangeLog:
+  - changeSet:
+      id: V1
+      author: ABolodurin
+      changes:
+
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  type: varchar(63)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_users
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(31)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: subscriptions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_subscriptions
+                    nullable: false
+              - column:
+                  name: subscriber
+                  type: varchar(63)
+                  constraints:
+                    foreignKeyName: fk_subscriptions_subscriber
+                    references: users(username)
+                    nullable: false
+              - column:
+                  name: subscription
+                  type: varchar(63)
+                  constraints:
+                    foreignKeyName: fk_subscriptions_subscription
+                    references: users(username)
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: subscriptions
+            columnNames: subscriber, subscription
+            constraintName: unique_sub
+
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_messages
+                    nullable: false
+              - column:
+                  name: producer
+                  type: varchar(63)
+                  constraints:
+                    foreignKeyName: fk_messages_producer
+                    references: users(username)
+                    nullable: false
+              - column:
+                  name: consumer
+                  type: varchar(63)
+                  constraints:
+                    foreignKeyName: fk_messages_consumer
+                    references: users(username)
+                    nullable: false
+              - column:
+                  name: message
+                  type: clob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: datetime
+                  defaultValue: now()
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: posts
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_posts
+                    nullable: false
+              - column:
+                  name: header
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: clob
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: datetime
+                  defaultValue: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_username
+                  type: varchar(63)
+                  constraints:
+                    foreignKeyName: fk_posts_user
+                    references: users(username)
+                    nullable: false
