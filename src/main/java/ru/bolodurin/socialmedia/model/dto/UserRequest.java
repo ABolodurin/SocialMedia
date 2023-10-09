@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotEmpty;
 @Builder
 public class UserRequest {
     @Schema(description = "User username")
-    @NotEmpty
+    @NotEmpty(message = "Field must be not empty")
     private String username;
 
     public static UserRequest of(String username) {

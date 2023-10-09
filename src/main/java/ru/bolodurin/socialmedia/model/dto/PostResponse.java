@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostResponse {
     @Schema(description = "Post ID")
+    @NotNull
     @Min(value = 1L)
     private Long id;
     @Schema(description = "Post header")

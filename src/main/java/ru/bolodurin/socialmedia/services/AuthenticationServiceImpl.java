@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.bolodurin.socialmedia.model.dto.AuthResponse;
 import ru.bolodurin.socialmedia.model.dto.LoginRequest;
 import ru.bolodurin.socialmedia.model.dto.RegisterRequest;
+import ru.bolodurin.socialmedia.model.entities.Code;
+import ru.bolodurin.socialmedia.model.entities.CommonException;
 import ru.bolodurin.socialmedia.model.entities.Role;
 import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.security.JwtService;
@@ -22,6 +24,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
+        if (userService.isExist(request.getUsername())) throw CommonException
+                .builder()
+                .code(Code.REQUEST_VALIDATION_ERROR)
+                .message("user " + request.getUsername() + " is already exist")
+                .build();
+
         User user = User
                 .builder()
                 .username(request.getUsername())
