@@ -28,7 +28,7 @@ public class SwaggerConfig {
     private String name;
     @Value(value = "${application.swagger.info.contact.email}")
     private String email;
-    @Value(value = "${application.swagger.info.contact.url}")
+    @Value(value = "${application.swagger.info.contact.telegram}")
     private String url;
 
 
