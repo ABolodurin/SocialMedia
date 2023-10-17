@@ -2,7 +2,6 @@ package ru.bolodurin.socialmedia.controllers;
 
 import com.sun.security.auth.UserPrincipal;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.dto.PostResponse;
 import ru.bolodurin.socialmedia.model.entities.Code;
 import ru.bolodurin.socialmedia.model.entities.CommonException;
@@ -24,7 +24,6 @@ import ru.bolodurin.socialmedia.services.PostServiceImpl;
 import ru.bolodurin.socialmedia.services.UserService;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -43,6 +42,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FeedControllerImplTest {
     private static final String PRINCIPAL_USERNAME = "username";
     private static final String VALID_AUTH_HEADER = "validHeader";
+    private static final Principal PRINCIPAL = new UserPrincipal(PRINCIPAL_USERNAME);
+
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
 
     @Autowired
     private MockMvc mvc;
@@ -51,43 +53,17 @@ class FeedControllerImplTest {
     @MockBean
     private UserService userService;
 
-    private Principal principal;
-    private User user;
-    private CommonException commonException;
-
-    @BeforeEach
-    void init() {
-        principal = new UserPrincipal(PRINCIPAL_USERNAME);
-
-        user = User
-                .builder()
-                .username(PRINCIPAL_USERNAME)
-                .build();
-
-        commonException = CommonException
-                .builder()
-                .code(Code.FEED_IS_EMPTY)
-                .message("message")
-                .build();
-    }
-
     @Test
     void shouldReturn200WhenFeedIsShown() throws Exception {
-        User expectedUser = user;
-        PostResponse expectedPost = PostResponse
-                .builder()
-                .id(1L)
-                .header("header")
-                .content("content")
-                .timestamp(LocalDateTime.now())
-                .build();
+        User expectedUser = entityFactory.getUser();
+        PostResponse expectedPost = entityFactory.getPostResponse();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(feedService.getFeedForUser(expectedUser)).willReturn(new PageImpl<>(
                 List.of(expectedPost), PostServiceImpl.DEFAULT_PAGEABLE, 1));
 
         mvc.perform(get("/feed")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", Matchers.notNullValue()))
@@ -113,11 +89,11 @@ class FeedControllerImplTest {
 
     @Test
     void shouldReturnCorrectFeedError() throws Exception {
-        CommonException expected = commonException;
+        CommonException expected = entityFactory.getCommonException();
         when(feedService.getFeedForUser(any())).thenThrow(expected);
 
         mvc.perform(get("/feed")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(expected.getCode()))))
@@ -130,7 +106,7 @@ class FeedControllerImplTest {
         when(feedService.getFeedForUser(any())).thenThrow(expected);
 
         mvc.perform(get("/feed")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().is5xxServerError())
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(Code.INTERNAL_SERVER_ERROR))))

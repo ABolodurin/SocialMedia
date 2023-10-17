@@ -8,6 +8,7 @@ public enum Code {
     FEED_IS_EMPTY,
     UPDATE_NON_OWN_ENTITY_ERROR,
     ALREADY_DONE,
-    NOT_FRIENDS
+    NOT_FRIENDS,
+    TEST_CODE
 
 }

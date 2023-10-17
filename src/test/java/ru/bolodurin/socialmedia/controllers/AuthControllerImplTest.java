@@ -2,7 +2,6 @@ package ru.bolodurin.socialmedia.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.dto.LoginRequest;
 import ru.bolodurin.socialmedia.model.dto.RegisterRequest;
 import ru.bolodurin.socialmedia.model.entities.Code;
@@ -38,6 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 class AuthControllerImplTest {
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
+
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -45,35 +47,9 @@ class AuthControllerImplTest {
     @MockBean
     private AuthenticationService authService;
 
-    private CommonException commonException;
-    private RegisterRequest registerRequest;
-    private LoginRequest loginRequest;
-
-    @BeforeEach
-    void init() {
-        commonException = CommonException
-                .builder()
-                .code(Code.AUTHENTICATION_ERROR)
-                .message("message")
-                .build();
-
-        registerRequest = RegisterRequest
-                .builder()
-                .username("user")
-                .email("email@mail.com")
-                .password("password")
-                .build();
-
-        loginRequest = LoginRequest
-                .builder()
-                .username("user")
-                .password("password")
-                .build();
-    }
-
     @Test
     void shouldReturn200WhenRegistered() throws Exception {
-        RegisterRequest expectedRequest = registerRequest;
+        RegisterRequest expectedRequest = entityFactory.getRegisterRequest();
 
         mvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +68,7 @@ class AuthControllerImplTest {
 
     @Test
     void shouldReturn200WhenAuthenticated() throws Exception {
-        LoginRequest expectedRequest = loginRequest;
+        LoginRequest expectedRequest = entityFactory.getLoginRequest();
 
         mvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -150,7 +126,8 @@ class AuthControllerImplTest {
 
     @Test
     void shouldReturnCorrectRegError() throws Exception {
-        CommonException expected = commonException;
+        RegisterRequest registerRequest = entityFactory.getRegisterRequest();
+        CommonException expected = entityFactory.getCommonException();
         when(authService.register(any())).thenThrow(expected);
 
         mvc.perform(post("/register")
@@ -164,13 +141,14 @@ class AuthControllerImplTest {
 
     @Test
     void shouldReturnCorrectAuthError() throws Exception {
+        LoginRequest loginRequest = entityFactory.getLoginRequest();
         AuthenticationException expected = new BadCredentialsException("message");
         when(authService.auth(any())).thenThrow(expected);
 
         mvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsBytes(registerRequest)))
+                        .content(objectMapper.writeValueAsBytes(loginRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(Code.AUTHENTICATION_ERROR))))
                 .andExpect(jsonPath("$.message", Matchers.is(expected.getMessage())));

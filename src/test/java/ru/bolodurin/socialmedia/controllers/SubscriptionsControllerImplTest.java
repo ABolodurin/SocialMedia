@@ -3,7 +3,6 @@ package ru.bolodurin.socialmedia.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.security.auth.UserPrincipal;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -15,9 +14,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.dto.SubsResponse;
 import ru.bolodurin.socialmedia.model.dto.UserRequest;
-import ru.bolodurin.socialmedia.model.dto.UserResponse;
 import ru.bolodurin.socialmedia.model.entities.Code;
 import ru.bolodurin.socialmedia.model.entities.CommonException;
 import ru.bolodurin.socialmedia.model.entities.User;
@@ -26,7 +25,6 @@ import ru.bolodurin.socialmedia.services.SubsService;
 import ru.bolodurin.socialmedia.services.UserService;
 
 import java.security.Principal;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SubscriptionsControllerImplTest {
     private static final String PRINCIPAL_USERNAME = "username";
     private static final String VALID_AUTH_HEADER = "validHeader";
+    private static final Principal PRINCIPAL = new UserPrincipal(PRINCIPAL_USERNAME);
+
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
 
     @Autowired
     private MockMvc mvc;
@@ -55,46 +56,17 @@ class SubscriptionsControllerImplTest {
     @MockBean
     private UserService userService;
 
-    private Principal principal;
-    private User user1;
-    private User user2;
-    private SubsResponse subsResponse;
-    private CommonException commonException;
-
-    @BeforeEach
-    void init() {
-        principal = new UserPrincipal(PRINCIPAL_USERNAME);
-
-        user1 = User
-                .builder()
-                .username(PRINCIPAL_USERNAME)
-                .build();
-
-        user2 = User
-                .builder()
-                .username("user2")
-                .build();
-
-        subsResponse = new SubsResponse(List.of(UserResponse.of(user2.getUsername())));
-
-        commonException = CommonException
-                .builder()
-                .code(Code.FEED_IS_EMPTY)
-                .message("message")
-                .build();
-    }
-
     @Test
     void shouldReturn200WhenSubscribed() throws Exception {
-        User expectedUser = user1;
-        UserRequest expectedSub = UserRequest.of(user2.getUsername());
-        SubsResponse expectedResponse = subsResponse;
+        User expectedUser = entityFactory.getUser();
+        UserRequest expectedSub = entityFactory.getUserRequest();
+        SubsResponse expectedResponse = entityFactory.getSubsResponse();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(subsService.subscribe(any(), any())).willReturn(expectedResponse);
 
         mvc.perform(put("/subscriptions/sub")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -122,15 +94,15 @@ class SubscriptionsControllerImplTest {
 
     @Test
     void shouldReturn200WhenUnsubscribed() throws Exception {
-        User expectedUser = user1;
-        UserRequest expectedSub = UserRequest.of(user2.getUsername());
-        SubsResponse expectedResponse = subsResponse;
+        User expectedUser = entityFactory.getUser();
+        UserRequest expectedSub = entityFactory.getUserRequest();
+        SubsResponse expectedResponse = entityFactory.getSubsResponse();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(subsService.unsubscribe(any(), any())).willReturn(expectedResponse);
 
         mvc.perform(put("/subscriptions/unsub")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -158,14 +130,14 @@ class SubscriptionsControllerImplTest {
 
     @Test
     void shouldReturn200WhenGetSubscriptions() throws Exception {
-        User expectedUser = user1;
-        SubsResponse expectedResponse = subsResponse;
+        User expectedUser = entityFactory.getUser();
+        SubsResponse expectedResponse = entityFactory.getSubsResponse();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(subsService.getSubscriptions(any())).willReturn(expectedResponse);
 
         mvc.perform(get("/subscriptions/subscriptions")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.users", Matchers.notNullValue()))
@@ -187,14 +159,14 @@ class SubscriptionsControllerImplTest {
 
     @Test
     void shouldReturn200WhenGetSubscribers() throws Exception {
-        User expectedUser = user1;
-        SubsResponse expectedResponse = subsResponse;
+        User expectedUser = entityFactory.getUser();
+        SubsResponse expectedResponse = entityFactory.getSubsResponse();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(subsService.getSubscribers(any())).willReturn(expectedResponse);
 
         mvc.perform(get("/subscriptions/subscribers")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.users", Matchers.notNullValue()))
@@ -219,7 +191,7 @@ class SubscriptionsControllerImplTest {
         UserRequest userRequest = UserRequest.of("");
 
         mvc.perform(put("/subscriptions/sub")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -228,7 +200,7 @@ class SubscriptionsControllerImplTest {
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(Code.REQUEST_VALIDATION_ERROR))));
 
         mvc.perform(put("/subscriptions/unsub")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -239,12 +211,12 @@ class SubscriptionsControllerImplTest {
 
     @Test
     void shouldReturnCorrectSubscribeError() throws Exception {
-        CommonException expected = commonException;
+        CommonException expected = entityFactory.getCommonException();
+        UserRequest expectedSub = entityFactory.getUserRequest();
         when(subsService.subscribe(any(), any())).thenThrow(expected);
-        UserRequest expectedSub = UserRequest.of(user2.getUsername());
 
         mvc.perform(put("/subscriptions/sub")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -256,12 +228,12 @@ class SubscriptionsControllerImplTest {
 
     @Test
     void shouldReturnCorrectUnsubscribeError() throws Exception {
-        CommonException expected = commonException;
+        CommonException expected = entityFactory.getCommonException();
+        UserRequest expectedSub = entityFactory.getUserRequest();
         when(subsService.unsubscribe(any(), any())).thenThrow(expected);
-        UserRequest expectedSub = UserRequest.of(user2.getUsername());
 
         mvc.perform(put("/subscriptions/unsub")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -273,11 +245,11 @@ class SubscriptionsControllerImplTest {
 
     @Test
     void shouldReturnCorrectSubscriptionsError() throws Exception {
-        CommonException expected = commonException;
+        CommonException expected = entityFactory.getCommonException();
         when(subsService.getSubscriptions(any())).thenThrow(expected);
 
         mvc.perform(get("/subscriptions/subscriptions")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(expected.getCode()))))
@@ -286,11 +258,11 @@ class SubscriptionsControllerImplTest {
 
     @Test
     void shouldReturnCorrectSubscribersError() throws Exception {
-        CommonException expected = commonException;
+        CommonException expected = entityFactory.getCommonException();
         when(subsService.getSubscribers(any())).thenThrow(expected);
 
         mvc.perform(get("/subscriptions/subscribers")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(expected.getCode()))))
                 .andExpect(jsonPath("$.message", Matchers.is(expected.getMessage())));

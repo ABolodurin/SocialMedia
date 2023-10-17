@@ -3,7 +3,6 @@ package ru.bolodurin.socialmedia.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.security.auth.UserPrincipal;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.dto.MessageRequest;
 import ru.bolodurin.socialmedia.model.dto.MessageResponse;
 import ru.bolodurin.socialmedia.model.dto.UserResponse;
@@ -30,7 +30,6 @@ import ru.bolodurin.socialmedia.services.MessageServiceImpl;
 import ru.bolodurin.socialmedia.services.UserService;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -50,6 +49,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MessageControllerImplTest {
     private static final String PRINCIPAL_USERNAME = "username";
     private static final String VALID_AUTH_HEADER = "validHeader";
+    private static final Principal PRINCIPAL = new UserPrincipal(PRINCIPAL_USERNAME);
+
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
 
     @Autowired
     private MockMvc mvc;
@@ -60,61 +62,23 @@ class MessageControllerImplTest {
     @MockBean
     private UserService userService;
 
-    private Principal principal;
-    private User user1;
-    private User user2;
-    private MessageRequest messageRequest;
-    private MessageResponse messageResponse;
-    private CommonException commonException;
-
-    @BeforeEach
-    void init() {
-        principal = new UserPrincipal(PRINCIPAL_USERNAME);
-
-        user1 = User
-                .builder()
-                .username(PRINCIPAL_USERNAME)
-                .build();
-
-        user2 = User
-                .builder()
-                .username("user2")
-                .build();
-
-        messageRequest = MessageRequest
-                .builder()
-                .consumer(user2.getUsername())
-                .message("message")
-                .build();
-
-        messageResponse = MessageResponse
-                .builder()
-                .from(user1.getUsername())
-                .to(user2.getUsername())
-                .message(messageRequest.getMessage())
-                .timestamp(LocalDateTime.now())
-                .build();
-
-        commonException = CommonException
-                .builder()
-                .code(Code.FEED_IS_EMPTY)
-                .message("message")
-                .build();
-    }
-
     @Test
     void shouldReturn200WhenMessageIsSent() throws Exception {
-        User expectedUser = user1;
-        MessageRequest expectedMessage = messageRequest;
-        MessageResponse expectedResponse = messageResponse;
+        User expectedUser = entityFactory.getUser();
+
+        MessageRequest expectedMessage = entityFactory.getMessageRequest();
+        expectedMessage.setConsumer(expectedUser.getUsername());
+
+        MessageResponse expectedResponse = entityFactory.getMessageResponse();
+        expectedResponse.setFrom(PRINCIPAL_USERNAME);
+        expectedResponse.setTo(expectedUser.getUsername());
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(messageService.sendMessage(any(), any())).willReturn(new PageImpl<>(
                 List.of(expectedResponse), MessageServiceImpl.DEFAULT_PAGEABLE, 1));
 
-
         mvc.perform(post("/messenger")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -146,9 +110,12 @@ class MessageControllerImplTest {
 
     @Test
     void shouldReturn200WhenChatIsShown() throws Exception {
-        User expectedProducer = user1;
-        UserResponse expectedConsumer = UserResponse.of(user2.getUsername());
-        MessageResponse expectedResponse = messageResponse;
+        User expectedProducer = entityFactory.getUser();
+        UserResponse expectedConsumer = entityFactory.getUserResponse();
+
+        MessageResponse expectedResponse = entityFactory.getMessageResponse();
+        expectedResponse.setFrom(expectedProducer.getUsername());
+        expectedResponse.setTo(expectedConsumer.getUsername());
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedProducer);
         given(messageService.getChatWith(any(), any())).willReturn(new PageImpl<>(
@@ -156,7 +123,7 @@ class MessageControllerImplTest {
 
 
         mvc.perform(get("/messenger")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -196,7 +163,7 @@ class MessageControllerImplTest {
                 .build();
 
         mvc.perform(post("/messenger")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -210,7 +177,7 @@ class MessageControllerImplTest {
         UserResponse expectedConsumer = UserResponse.of("");
 
         mvc.perform(get("/messenger")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -221,11 +188,14 @@ class MessageControllerImplTest {
 
     @Test
     void shouldReturnCorrectMessageError() throws Exception {
-        CommonException expected = commonException;
+        CommonException expected = entityFactory.getCommonException();
         when(messageService.sendMessage(any(), any())).thenThrow(expected);
 
+        MessageRequest messageRequest = entityFactory.getMessageRequest();
+        messageRequest.setConsumer("someUser");
+
         mvc.perform(post("/messenger")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -237,15 +207,16 @@ class MessageControllerImplTest {
 
     @Test
     void shouldReturnCorrectChatError() throws Exception {
-        CommonException expected = commonException;
+        UserResponse userResponse = entityFactory.getUserResponse();
+        CommonException expected = entityFactory.getCommonException();
         when(messageService.getChatWith(any(), any())).thenThrow(expected);
 
         mvc.perform(get("/messenger")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsBytes(UserResponse.of(user2.getUsername()))))
+                        .content(objectMapper.writeValueAsBytes(userResponse)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(expected.getCode()))))
                 .andExpect(jsonPath("$.message", Matchers.is(expected.getMessage())));

@@ -3,7 +3,6 @@ package ru.bolodurin.socialmedia.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.security.auth.UserPrincipal;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.dto.PostRequest;
 import ru.bolodurin.socialmedia.model.dto.PostResponse;
 import ru.bolodurin.socialmedia.model.entities.Code;
@@ -51,6 +51,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerImplTest {
     private static final String PRINCIPAL_USERNAME = "username";
     private static final String VALID_AUTH_HEADER = "validHeader";
+    private static final Principal PRINCIPAL = new UserPrincipal(PRINCIPAL_USERNAME);
+
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
 
     @Autowired
     private MockMvc mvc;
@@ -61,54 +64,18 @@ class PostControllerImplTest {
     @MockBean
     private UserService userService;
 
-    private Principal principal;
-    private User user;
-    private PostResponse postResponse;
-    private PostRequest postRequest;
-    private CommonException commonException;
-
-    @BeforeEach
-    void init() {
-        principal = new UserPrincipal(PRINCIPAL_USERNAME);
-
-        user = User
-                .builder()
-                .username(PRINCIPAL_USERNAME)
-                .build();
-
-        postResponse = PostResponse
-                .builder()
-                .id(1L)
-                .header("header")
-                .content("content")
-                .timestamp(LocalDateTime.now())
-                .build();
-
-        postRequest = PostRequest
-                .builder()
-                .header("header")
-                .content("content")
-                .build();
-
-        commonException = CommonException
-                .builder()
-                .code(Code.UPDATE_NON_OWN_ENTITY_ERROR)
-                .message("message")
-                .build();
-    }
-
     @Test
     void shouldReturn200WhenPostIsCreated() throws Exception {
-        User expectedUser = user;
-        PostResponse expectedResponse = postResponse;
-        PostRequest expectedPost = postRequest;
+        User expectedUser = entityFactory.getUser();
+        PostResponse expectedResponse = entityFactory.getPostResponse();
+        PostRequest expectedPost = entityFactory.getPostRequest();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(postService.create(any(), any())).willReturn(new PageImpl<>(
                 List.of(expectedResponse), PostServiceImpl.DEFAULT_PAGEABLE, 1));
 
         mvc.perform(post("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -140,15 +107,15 @@ class PostControllerImplTest {
 
     @Test
     void shouldReturn200WhenPostIsUpdated() throws Exception {
-        User expectedUser = user;
-        PostResponse expectedPost = postResponse;
+        User expectedUser = entityFactory.getUser();
+        PostResponse expectedPost = entityFactory.getPostResponse();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(postService.update(any(), any())).willReturn(new PageImpl<>(
                 List.of(expectedPost), PostServiceImpl.DEFAULT_PAGEABLE, 1));
 
         mvc.perform(put("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -180,15 +147,15 @@ class PostControllerImplTest {
 
     @Test
     void shouldReturn200WhenPostIsDeleted() throws Exception {
-        User expectedUser = user;
-        PostResponse expectedPost = postResponse;
+        User expectedUser = entityFactory.getUser();
+        PostResponse expectedPost = entityFactory.getPostResponse();
 
         given(userService.findByUsername(PRINCIPAL_USERNAME)).willReturn(expectedUser);
         given(postService.delete(any(), any())).willReturn(new PageImpl<>(
                 List.of(expectedPost), PostServiceImpl.DEFAULT_PAGEABLE, 1));
 
         mvc.perform(delete("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -220,8 +187,8 @@ class PostControllerImplTest {
 
     @Test
     void shouldReturn200WhenShowPostById() throws Exception {
-        long expectedId = 1L;
-        PostResponse expectedPost = postResponse;
+        PostResponse expectedPost = entityFactory.getPostResponse();
+        long expectedId = expectedPost.getId();
 
         given(postService.show(any())).willReturn(expectedPost);
 
@@ -254,7 +221,7 @@ class PostControllerImplTest {
                 .build();
 
         mvc.perform(post("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -280,7 +247,7 @@ class PostControllerImplTest {
                 .build();
 
         mvc.perform(put("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -289,7 +256,7 @@ class PostControllerImplTest {
                 .andExpect(jsonPath("$.code", Matchers.is(String.valueOf(Code.REQUEST_VALIDATION_ERROR))));
 
         mvc.perform(delete("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -300,11 +267,12 @@ class PostControllerImplTest {
 
     @Test
     void shouldReturnCorrectCreateError() throws Exception {
-        CommonException expected = commonException;
+        PostRequest postRequest = entityFactory.getPostRequest();
+        CommonException expected = entityFactory.getCommonException();
         when(postService.create(any(), any())).thenThrow(expected);
 
         mvc.perform(post("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -316,11 +284,12 @@ class PostControllerImplTest {
 
     @Test
     void shouldReturnCorrectUpdateError() throws Exception {
-        CommonException expected = commonException;
+        PostResponse postResponse = entityFactory.getPostResponse();
+        CommonException expected = entityFactory.getCommonException();
         when(postService.update(any(), any())).thenThrow(expected);
 
         mvc.perform(put("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -332,11 +301,12 @@ class PostControllerImplTest {
 
     @Test
     void shouldReturnCorrectDeleteError() throws Exception {
-        CommonException expected = commonException;
+        PostResponse postResponse = entityFactory.getPostResponse();
+        CommonException expected = entityFactory.getCommonException();
         when(postService.delete(any(), any())).thenThrow(expected);
 
         mvc.perform(delete("/userposts")
-                        .principal(principal)
+                        .principal(PRINCIPAL)
                         .header("Authorization", VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -348,7 +318,7 @@ class PostControllerImplTest {
 
     @Test
     void shouldReturnCorrectShowError() throws Exception {
-        CommonException expected = commonException;
+        CommonException expected = entityFactory.getCommonException();
         when(postService.show(any())).thenThrow(expected);
 
         mvc.perform(get("/userposts/" + 1L)
