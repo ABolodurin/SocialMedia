@@ -35,7 +35,7 @@
 
 DB migration is not required, Hibernate does it automatically.
 
-Localhost ports customization: ```src/main/resources/application.properties```
+Localhost ports customization: ```src/main/resources/application.yml```
 
 ### UI
 <image
@@ -104,7 +104,7 @@ Post contains
 - All available endpoints are documented using Swagger
 - Documentation contains request/response formats
   and authentication requirements
-- GUI available after start (path: ```/swagger-ui/```)
+- GUI available after start (path: ```/swagger-ui.html```)
 - [JSON API docs](https://github.com/ABolodurin/SocialMedia/blob/master/api-docs.json)
 
 ### Testing
