@@ -1,9 +1,8 @@
 package ru.bolodurin.socialmedia.controllers;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,19 +16,19 @@ import ru.bolodurin.socialmedia.model.dto.LoginRequest;
 import ru.bolodurin.socialmedia.model.dto.RegisterRequest;
 import ru.bolodurin.socialmedia.services.AuthenticationService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
-@Api(tags = {SwaggerConfig.AUTH_TAG})
+@Tag(name = SwaggerConfig.AUTH_TAG)
 public class AuthControllerImpl implements AuthController {
     private final AuthenticationService authService;
 
     @Override
     @PostMapping("/register")
-    @ApiOperation(value = "Receives registration form and returns bearer token")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful registration"))
+    @Operation(summary = "Receives registration form and returns bearer token",
+            responses = @ApiResponse(responseCode = "200", description = "Successful registration"))
     public @ResponseBody ResponseEntity<AuthResponse> register(
             @Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
@@ -37,10 +36,10 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     @PostMapping("/login")
-    @ApiOperation(value = "Receives login form and returns bearer token")
-    @ApiResponses(value = @ApiResponse(code = 200, message = "Successful login"))
+    @Operation(summary = "Receives login form and returns bearer token",
+            responses = @ApiResponse(responseCode = "200", description = "Successful login"))
     public @ResponseBody ResponseEntity<AuthResponse> login(
-            @RequestBody LoginRequest request) {
+           @Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.auth(request));
     }
 

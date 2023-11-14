@@ -1,393 +1,112 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.1",
   "info": {
-    "description": "Social media API pet project",
-    "version": "1.0",
     "title": "Social media",
+    "description": "Social media API project",
     "contact": {
       "name": "Aleksandr Bolodurin",
       "url": "https://t.me/bandit26",
       "email": "shur026@yandex.ru"
-    }
+    },
+    "version": "1.0"
   },
-  "host": "localhost:8080",
-  "basePath": "/",
-  "tags": [
+  "servers": [
     {
-      "name": "Messenger resource",
-      "description": "Message Controller Impl"
-    },
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
     {
-      "name": "User authorization resource",
-      "description": "Auth Controller Impl"
-    },
-    {
-      "name": "User feed resource",
-      "description": "Feed Controller Impl"
-    },
-    {
-      "name": "User posts resource",
-      "description": "Post Controller Impl"
-    },
-    {
-      "name": "User subscriptions resource",
-      "description": "Subscriptions Controller Impl"
+      "Bearer Authentication": []
     }
   ],
   "paths": {
-    "/feed": {
-      "get": {
+    "/userposts": {
+      "put": {
         "tags": [
-          "User feed resource"
+          "User posts resource"
         ],
-        "summary": "Shows feed for current user",
-        "operationId": "showFeedUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          }
-        ],
+        "summary": "Updates the user's post",
+        "operationId": "updatePost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostResponse"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Successful creation",
-            "schema": {
-              "$ref": "#/definitions/Page«PostResponse»"
+            "description": "Successful update",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagePostResponse"
+                }
+              }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/login": {
-      "post": {
-        "tags": [
-          "User authorization resource"
-        ],
-        "summary": "Receives login form and returns bearer token",
-        "operationId": "loginUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/LoginRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful login",
-            "schema": {
-              "$ref": "#/definitions/AuthResponse"
-            }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/messenger": {
-      "get": {
-        "tags": [
-          "Messenger resource"
-        ],
-        "summary": "Show chat with user",
-        "operationId": "showChatWithUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "userToChat",
-            "description": "userToChat",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UserResponse"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Page«MessageResponse»"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       },
       "post": {
         "tags": [
-          "Messenger resource"
+          "User posts resource"
         ],
-        "summary": "Send message to user",
-        "operationId": "sendMessageUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "message",
-            "description": "message",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/MessageRequest"
+        "summary": "Creates the user's post",
+        "operationId": "createPost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRequest"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Successful send",
-            "schema": {
-              "$ref": "#/definitions/Page«MessageResponse»"
+            "description": "Successful creation",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagePostResponse"
+                }
+              }
             }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
-      }
-    },
-    "/register": {
-      "post": {
+      },
+      "delete": {
         "tags": [
-          "User authorization resource"
+          "User posts resource"
         ],
-        "summary": "Receives registration form and returns bearer token",
-        "operationId": "registerUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RegisterRequest"
+        "summary": "Deletes the user's post",
+        "operationId": "deletePost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostResponse"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Successful registration",
-            "schema": {
-              "$ref": "#/definitions/AuthResponse"
+            "description": "Successful delete",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagePostResponse"
+                }
+              }
             }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/subscriptions/sub": {
-      "put": {
-        "tags": [
-          "User subscriptions resource"
-        ],
-        "summary": "Subscribe",
-        "operationId": "subscribeUsingPUT",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "userToSubscribe",
-            "description": "userToSubscribe",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UserRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful, returns subscriptions",
-            "schema": {
-              "$ref": "#/definitions/SubsResponse"
-            }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/subscriptions/subscribers": {
-      "get": {
-        "tags": [
-          "User subscriptions resource"
-        ],
-        "summary": "Get current subscribers",
-        "operationId": "getSubscribersUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "schema": {
-              "$ref": "#/definitions/SubsResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/subscriptions/subscriptions": {
-      "get": {
-        "tags": [
-          "User subscriptions resource"
-        ],
-        "summary": "Get current subscriptions",
-        "operationId": "getSubscriptionsUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful",
-            "schema": {
-              "$ref": "#/definitions/SubsResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       }
@@ -398,198 +117,180 @@
           "User subscriptions resource"
         ],
         "summary": "Unsubscribe",
-        "operationId": "unsubscribeUsingPUT",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "userToUnsubscribe",
-            "description": "userToUnsubscribe",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UserRequest"
+        "operationId": "unsubscribe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequest"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful, returns subscriptions",
-            "schema": {
-              "$ref": "#/definitions/SubsResponse"
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubsResponse"
+                }
+              }
             }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       }
     },
-    "/userposts": {
-      "post": {
-        "tags": [
-          "User posts resource"
-        ],
-        "summary": "Creates the user's post",
-        "operationId": "createPostUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "post",
-            "description": "post",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PostRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful creation",
-            "schema": {
-              "$ref": "#/definitions/Page«PostResponse»"
-            }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
+    "/subscriptions/sub": {
       "put": {
         "tags": [
-          "User posts resource"
+          "User subscriptions resource"
         ],
-        "summary": "Updates the user's post",
-        "operationId": "updatePostUsingPUT",
-        "consumes": [
-          "application/json"
+        "summary": "Subscribe",
+        "operationId": "subscribe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful, returns subscriptions",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "User authorization resource"
         ],
-        "produces": [
-          "*/*"
+        "summary": "Receives registration form and returns bearer token",
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful registration",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messenger": {
+      "get": {
+        "tags": [
+          "Messenger resource"
         ],
+        "summary": "Show chat with user",
+        "operationId": "showChatWith",
         "parameters": [
           {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "updatedPost",
-            "description": "updatedPost",
+            "name": "userToChat",
+            "in": "query",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PostResponse"
+              "$ref": "#/components/schemas/UserResponse"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful update",
-            "schema": {
-              "$ref": "#/definitions/Page«PostResponse»"
+            "description": "Success",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMessageResponse"
+                }
+              }
             }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       },
-      "delete": {
+      "post": {
         "tags": [
-          "User posts resource"
+          "Messenger resource"
         ],
-        "summary": "Deletes the user's post",
-        "operationId": "deletePostUsingDELETE",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "\"Bearer \"+ autorization token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "post",
-            "description": "post",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PostResponse"
+        "summary": "Send message to user",
+        "operationId": "sendMessage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Successful delete",
-            "schema": {
-              "$ref": "#/definitions/Page«PostResponse»"
+            "description": "Successful send",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMessageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "User authorization resource"
+        ],
+        "summary": "Receives login form and returns bearer token",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
             }
           },
-          "204": {
-            "description": "No Content"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -600,328 +301,402 @@
           "User posts resource"
         ],
         "summary": "Show post by id",
-        "operationId": "showUsingGET",
-        "produces": [
-          "*/*"
-        ],
+        "operationId": "show",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "id",
             "required": true,
-            "type": "integer",
-            "format": "int64"
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/PostResponse"
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostResponse"
+                }
+              }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/subscriptions/subscriptions": {
+      "get": {
+        "tags": [
+          "User subscriptions resource"
+        ],
+        "summary": "Get current subscriptions",
+        "operationId": "getSubscriptions",
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/subscribers": {
+      "get": {
+        "tags": [
+          "User subscriptions resource"
+        ],
+        "summary": "Get current subscribers",
+        "operationId": "getSubscribers",
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feed": {
+      "get": {
+        "tags": [
+          "User feed resource"
+        ],
+        "summary": "Shows feed for current user",
+        "operationId": "showFeed",
+        "responses": {
+          "200": {
+            "description": "Successful creation",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagePostResponse"
+                }
+              }
+            }
           }
         }
       }
     }
   },
-  "definitions": {
-    "AuthResponse": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "type": "string",
-          "description": "Bearer token"
-        }
-      },
-      "title": "AuthResponse"
-    },
-    "LoginRequest": {
-      "type": "object",
-      "properties": {
-        "password": {
-          "type": "string",
-          "description": "User password"
-        },
-        "username": {
-          "type": "string",
-          "description": "User username"
-        }
-      },
-      "title": "LoginRequest"
-    },
-    "MessageRequest": {
-      "type": "object",
-      "properties": {
-        "consumer": {
-          "type": "string",
-          "description": "Consumer username"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message content"
-        }
-      },
-      "title": "MessageRequest"
-    },
-    "MessageResponse": {
-      "type": "object",
-      "properties": {
-        "from": {
-          "type": "string",
-          "description": "Producer username"
-        },
-        "message": {
-          "type": "string",
-          "description": "Message content"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Message timestamp"
-        },
-        "to": {
-          "type": "string",
-          "description": "Consumer username"
-        }
-      },
-      "title": "MessageResponse"
-    },
-    "Pageable": {
-      "type": "object",
-      "properties": {
-        "offset": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "pageNumber": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "paged": {
-          "type": "boolean"
-        },
-        "sort": {
-          "$ref": "#/definitions/Sort"
-        },
-        "unpaged": {
-          "type": "boolean"
-        }
-      },
-      "title": "Pageable"
-    },
-    "Page«MessageResponse»": {
-      "type": "object",
-      "properties": {
-        "content": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MessageResponse"
-          }
-        },
-        "empty": {
-          "type": "boolean"
-        },
-        "first": {
-          "type": "boolean"
-        },
-        "last": {
-          "type": "boolean"
-        },
-        "number": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "numberOfElements": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageable": {
-          "$ref": "#/definitions/Pageable"
-        },
-        "size": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sort": {
-          "$ref": "#/definitions/Sort"
-        },
-        "totalElements": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "totalPages": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "Page«MessageResponse»"
-    },
-    "Page«PostResponse»": {
-      "type": "object",
-      "properties": {
-        "content": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PostResponse"
-          }
-        },
-        "empty": {
-          "type": "boolean"
-        },
-        "first": {
-          "type": "boolean"
-        },
-        "last": {
-          "type": "boolean"
-        },
-        "number": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "numberOfElements": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "pageable": {
-          "$ref": "#/definitions/Pageable"
-        },
-        "size": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "sort": {
-          "$ref": "#/definitions/Sort"
-        },
-        "totalElements": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "totalPages": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "Page«PostResponse»"
-    },
-    "PostRequest": {
-      "type": "object",
-      "properties": {
-        "content": {
-          "type": "string",
-          "description": "Post content"
-        },
-        "header": {
-          "type": "string",
-          "description": "Post header"
-        }
-      },
-      "title": "PostRequest"
-    },
-    "PostResponse": {
-      "type": "object",
-      "properties": {
-        "content": {
-          "type": "string",
-          "description": "Post content"
-        },
-        "header": {
-          "type": "string",
-          "description": "Post header"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Post ID"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Post timestamp"
-        }
-      },
-      "title": "PostResponse"
-    },
-    "RegisterRequest": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string",
-          "description": "User email, uses as auth login"
-        },
-        "password": {
-          "type": "string",
-          "description": "User password",
-          "minLength": 6,
-          "maxLength": 2147483647
-        },
-        "username": {
-          "type": "string",
-          "description": "Username"
-        }
-      },
-      "title": "RegisterRequest"
-    },
-    "Sort": {
-      "type": "object",
-      "properties": {
-        "empty": {
-          "type": "boolean"
-        },
-        "sorted": {
-          "type": "boolean"
-        },
-        "unsorted": {
-          "type": "boolean"
-        }
-      },
-      "title": "Sort"
-    },
-    "SubsResponse": {
-      "type": "object",
-      "properties": {
-        "users": {
-          "type": "array",
-          "description": "List of subscriptions/subscribers",
-          "items": {
-            "$ref": "#/definitions/UserResponse"
+  "components": {
+    "schemas": {
+      "PostResponse": {
+        "required": [
+          "content",
+          "header",
+          "id",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Post ID",
+            "format": "int64"
+          },
+          "header": {
+            "type": "string",
+            "description": "Post header"
+          },
+          "content": {
+            "type": "string",
+            "description": "Post content"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Post timestamp",
+            "format": "date-time"
           }
         }
       },
-      "title": "SubsResponse"
-    },
-    "UserRequest": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string",
-          "description": "User username"
+      "PagePostResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
         }
       },
-      "title": "UserRequest"
-    },
-    "UserResponse": {
-      "type": "object",
-      "properties": {
-        "username": {
-          "type": "string",
-          "description": "User username"
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
         }
       },
-      "title": "UserResponse"
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserRequest": {
+        "required": [
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "User username"
+          }
+        }
+      },
+      "SubsResponse": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "description": "List of subscriptions/subscribers",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "User username"
+          }
+        },
+        "description": "List of subscriptions/subscribers"
+      },
+      "PostRequest": {
+        "required": [
+          "content",
+          "header"
+        ],
+        "type": "object",
+        "properties": {
+          "header": {
+            "type": "string",
+            "description": "Post header"
+          },
+          "content": {
+            "type": "string",
+            "description": "Post content"
+          }
+        }
+      },
+      "RegisterRequest": {
+        "required": [
+          "email",
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username, uses as auth login"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "password": {
+            "maxLength": 2147483647,
+            "minLength": 6,
+            "type": "string",
+            "description": "User password"
+          }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Bearer token"
+          }
+        }
+      },
+      "MessageRequest": {
+        "type": "object",
+        "properties": {
+          "consumer": {
+            "type": "string",
+            "description": "Consumer username"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message content"
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "Producer username"
+          },
+          "to": {
+            "type": "string",
+            "description": "Consumer username"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message content"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Message timestamp",
+            "format": "date-time"
+          }
+        }
+      },
+      "PageMessageResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": [
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "User username"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer Authentication": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   }
 }

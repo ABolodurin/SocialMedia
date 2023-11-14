@@ -6,9 +6,11 @@ import ru.bolodurin.socialmedia.model.dto.MessageRequest;
 import ru.bolodurin.socialmedia.model.dto.MessageResponse;
 import ru.bolodurin.socialmedia.model.dto.UserResponse;
 
-public interface MessageController {
-    ResponseEntity<Page<MessageResponse>> sendMessage(MessageRequest message, String authHeader);
+import java.security.Principal;
 
-    ResponseEntity<Page<MessageResponse>> showChatWith(UserResponse userToChat, String authHeader);
+public interface MessageController {
+    ResponseEntity<Page<MessageResponse>> sendMessage(MessageRequest message, Principal principal);
+
+    ResponseEntity<Page<MessageResponse>> showChatWith(UserResponse userToChat, Principal principal);
 
 }

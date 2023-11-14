@@ -9,4 +9,6 @@ public interface UserService {
 
     void update(String username, User updatedUser);
 
+    boolean isExist(String username);
+
 }

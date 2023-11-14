@@ -1,6 +1,6 @@
 package ru.bolodurin.socialmedia.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import ru.bolodurin.socialmedia.model.entities.Code;
@@ -8,9 +8,9 @@ import ru.bolodurin.socialmedia.model.entities.Code;
 @Data
 @Builder
 public class ErrorResponse {
-    @ApiModelProperty(notes = "Error code")
+    @Schema(description = "Error code")
     private Code code;
-    @ApiModelProperty(notes = "Error message")
+    @Schema(description = "Error message")
     private String message;
 
 }

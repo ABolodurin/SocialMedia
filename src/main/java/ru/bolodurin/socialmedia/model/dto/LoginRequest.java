@@ -1,26 +1,25 @@
 package ru.bolodurin.socialmedia.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {
-    @ApiModelProperty(notes = "User username")
-    @NotEmpty
-    @Email
+    @Schema(description = "User username")
+    @NotEmpty(message = "Field must be not empty")
     private String username;
 
-    @ApiModelProperty(notes = "User password")
-    @NotEmpty
+    @Schema(description = "User password")
+    @NotEmpty(message = "Field must be not empty")
     private String password;
 
 }

@@ -4,13 +4,15 @@ import org.springframework.http.ResponseEntity;
 import ru.bolodurin.socialmedia.model.dto.SubsResponse;
 import ru.bolodurin.socialmedia.model.dto.UserRequest;
 
+import java.security.Principal;
+
 public interface SubscriptionsController {
-    ResponseEntity<SubsResponse> subscribe(UserRequest userToSubscribe, String authHeader);
+    ResponseEntity<SubsResponse> subscribe(UserRequest userToSubscribe, Principal principal);
 
-    ResponseEntity<SubsResponse> unsubscribe(UserRequest userToUnsubscribe, String authHeader);
+    ResponseEntity<SubsResponse> unsubscribe(UserRequest userToUnsubscribe, Principal principal);
 
-    ResponseEntity<SubsResponse> getSubscriptions(String authHeader);
+    ResponseEntity<SubsResponse> getSubscriptions(Principal principal);
 
-    ResponseEntity<SubsResponse> getSubscribers(String authHeader);
+    ResponseEntity<SubsResponse> getSubscribers(Principal principal);
 
 }
