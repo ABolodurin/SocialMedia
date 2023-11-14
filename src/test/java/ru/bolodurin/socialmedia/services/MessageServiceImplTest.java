@@ -7,17 +7,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
+import ru.bolodurin.socialmedia.TestEntityFactory;
+import ru.bolodurin.socialmedia.model.dto.MessageRequest;
+import ru.bolodurin.socialmedia.model.dto.UserResponse;
 import ru.bolodurin.socialmedia.model.entities.CommonException;
 import ru.bolodurin.socialmedia.model.entities.Message;
-import ru.bolodurin.socialmedia.model.dto.MessageRequest;
-import ru.bolodurin.socialmedia.model.mappers.MessageResponseMapper;
-import ru.bolodurin.socialmedia.model.entities.Post;
-import ru.bolodurin.socialmedia.model.entities.Role;
 import ru.bolodurin.socialmedia.model.entities.User;
-import ru.bolodurin.socialmedia.model.dto.UserResponse;
+import ru.bolodurin.socialmedia.model.mappers.MessageResponseMapper;
 import ru.bolodurin.socialmedia.repositories.MessageRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +27,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MessageServiceImplTest {
-    private User user1;
-    private User user2;
-    private Message message;
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
     private MessageService messageService;
 
     @Mock
@@ -45,37 +41,17 @@ class MessageServiceImplTest {
     void init() {
         messageService = new MessageServiceImpl(
                 userService, messageRepository, new MessageResponseMapper(), subsService);
-
-        user1 = User
-                .builder()
-                .username("username1")
-                .email("email")
-                .password("password")
-                .role(Role.USER)
-                .posts(List.of(new Post()))
-                .subscriptions(new ArrayList<>())
-                .subscribers(new ArrayList<>())
-                .build();
-
-        user2 = User
-                .builder()
-                .username("username2")
-                .email("email")
-                .password("password")
-                .role(Role.USER)
-                .posts(List.of(new Post()))
-                .subscriptions(new ArrayList<>())
-                .subscribers(new ArrayList<>())
-                .build();
-
-        message = new Message("message", user2, user1);
     }
 
     @Test
     void shouldSendMessage() {
-        User expectedProducer = user1;
-        User expectedConsumer = user2;
-        String expectedMessage = "message";
+        User expectedProducer = entityFactory.getUser();
+        User expectedConsumer = entityFactory.getUser();
+
+        Message message = entityFactory.getMessage();
+        message.setProducer(expectedProducer);
+        message.setConsumer(expectedConsumer);
+        String expectedMessage = message.getMessage();
 
         when(subsService.isFriends(expectedProducer, expectedConsumer))
                 .thenReturn(true);
@@ -103,8 +79,12 @@ class MessageServiceImplTest {
 
     @Test
     void shouldGetChat() {
-        User expectedProducer = user1;
-        User expectedConsumer = user2;
+        User expectedProducer = entityFactory.getUser();
+        User expectedConsumer = entityFactory.getUser();
+
+        Message message = entityFactory.getMessage();
+        message.setProducer(expectedProducer);
+        message.setConsumer(expectedConsumer);
 
         when(userService.findByUsername(expectedConsumer.getUsername()))
                 .thenReturn(expectedConsumer);
@@ -128,9 +108,8 @@ class MessageServiceImplTest {
 
     @Test
     void shouldThrowIfNotFriends() {
-        User expectedProducer = user1;
-        User expectedConsumer = user2;
-        String expectedMessage = "message";
+        User expectedProducer = entityFactory.getUser();
+        User expectedConsumer = entityFactory.getUser();
 
         when(subsService.isFriends(expectedProducer, expectedConsumer))
                 .thenReturn(false);
@@ -141,7 +120,7 @@ class MessageServiceImplTest {
                 expectedProducer, MessageRequest
                         .builder()
                         .consumer(expectedConsumer.getUsername())
-                        .message(expectedMessage)
+                        .message("message")
                         .build()))
                 .isInstanceOf(CommonException.class)
                 .hasMessageContaining(expectedConsumer.getUsername());
@@ -149,8 +128,8 @@ class MessageServiceImplTest {
 
     @Test
     void shouldThrowWhenChatIsEmpty() {
-        User expectedProducer = user1;
-        User expectedConsumer = user2;
+        User expectedProducer = entityFactory.getUser();
+        User expectedConsumer = entityFactory.getUser();
 
         when(userService.findByUsername(expectedConsumer.getUsername()))
                 .thenReturn(expectedConsumer);

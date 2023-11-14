@@ -1,6 +1,7 @@
 package ru.bolodurin.socialmedia.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageRequest {
-    @ApiModelProperty(notes = "Consumer username")
+    @Schema(description = "Consumer username")
+    @NotEmpty(message = "Field must be not empty")
     private String consumer;
-    @ApiModelProperty(notes = "Message content")
+    @Schema(description = "Message content")
+    @NotEmpty(message = "Field must be not empty")
     private String message;
 
 }

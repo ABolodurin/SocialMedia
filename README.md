@@ -6,42 +6,48 @@
 
 ## Stack
 
-- Java ```11```
+- Java ```17```
 - Maven ```4.0.0```
-- Spring Boot ```2.7.14```
+- Spring Boot ```3.0.0```
     - Spring Security
     - Spring Data JPA
     - Spring Web
 - PostgreSQL
 - Lombok
 - JUnit/Mockito
-- SpringFox (Swagger) ```3.0.0```
+- Swagger ```3.0```
 
 ## Start
 
-- Set project JDK to version 11
+- Set project JDK to version 17
 - Create new DB path ```localhost:5432/socialmedia``` in postgreSQL
   ```SQL
   CREATE DATABASE socialmedia;
   ```
 - Run the application
-- Swagger UI path ```localhost:8080/swagger-ui/```
+- Swagger UI path ```localhost:8080/swagger-ui.html```
+- Type in swagger form ```/v3/api-docs``` and click ```Explore```
+
+<image
+  src="/form.png"
+  alt="form"
+  caption="form">
 
 DB migration is not required, Hibernate does it automatically.
 
-Localhost ports customization: ```src/main/resources/application.properties```
+Localhost ports customization: ```src/main/resources/application.yml```
 
 ### UI
 <image
 src="/UI.png"
 alt="UI"
-caption="Иллюстрация UI">
+caption="UI">
 
 ### DB
 <image
 src="/DB.png"
 alt="DB"
-caption="Иллюстрация DB">
+caption="DB">
 
 ### Swagger documentation
 
@@ -98,9 +104,9 @@ Post contains
 - All available endpoints are documented using Swagger
 - Documentation contains request/response formats
   and authentication requirements
-- GUI available after start (path: ```/swagger-ui/```)
+- GUI available after start (path: ```/swagger-ui.html```)
 - [JSON API docs](https://github.com/ABolodurin/SocialMedia/blob/master/api-docs.json)
 
 ### Testing
 
-- Services and repositories are covered with unit tests
+- All controllers, services, and repositories are fully covered with unit tests

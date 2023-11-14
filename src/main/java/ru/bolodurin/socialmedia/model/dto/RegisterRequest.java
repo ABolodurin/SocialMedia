@@ -1,30 +1,30 @@
 package ru.bolodurin.socialmedia.model.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    @ApiModelProperty(notes = "Username")
+    @Schema(description = "Username, uses as auth login")
     @NotEmpty(message = "Field must be not empty")
     private String username;
 
-    @ApiModelProperty(notes = "User email, uses as auth login")
+    @Schema(description = "User email")
     @NotEmpty
     @Email(message = "Please enter a valid email address")
     private String email;
 
-    @ApiModelProperty(notes = "User password")
+    @Schema(description = "User password")
     @NotEmpty
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;

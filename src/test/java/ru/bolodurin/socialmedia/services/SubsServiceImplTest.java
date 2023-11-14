@@ -6,15 +6,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.dto.UserRequest;
 import ru.bolodurin.socialmedia.model.dto.UserResponse;
-import ru.bolodurin.socialmedia.model.entities.Post;
-import ru.bolodurin.socialmedia.model.entities.Role;
 import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.model.mappers.UserResponseMapper;
 import ru.bolodurin.socialmedia.repositories.SubsRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SubsServiceImplTest {
-    private User user1;
-    private User user2;
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
     private UserResponseMapper userResponseMapper;
     private SubsService subsService;
 
@@ -38,34 +35,12 @@ class SubsServiceImplTest {
     void init() {
         userResponseMapper = new UserResponseMapper();
         subsService = new SubsServiceImpl(userService, userResponseMapper, subsRepository);
-
-        user1 = User
-                .builder()
-                .username("username1")
-                .email("email")
-                .password("password")
-                .role(Role.USER)
-                .posts(List.of(new Post()))
-                .subscriptions(new ArrayList<>())
-                .subscribers(new ArrayList<>())
-                .build();
-
-        user2 = User
-                .builder()
-                .username("username2")
-                .email("email")
-                .password("password")
-                .role(Role.USER)
-                .posts(List.of(new Post()))
-                .subscriptions(new ArrayList<>())
-                .subscribers(new ArrayList<>())
-                .build();
     }
 
     @Test
     void userShouldSubscribe() {
-        User expectedUser = user1;
-        User subscription = user2;
+        User expectedUser = entityFactory.getUser();
+        User subscription = entityFactory.getUser();
         when(userService.findByUsername(subscription.getUsername()))
                 .thenReturn(subscription);
 
@@ -82,8 +57,8 @@ class SubsServiceImplTest {
 
     @Test
     void userShouldUnsubscribe() {
-        User expectedUser = user1;
-        User subscription = user2;
+        User expectedUser = entityFactory.getUser();
+        User subscription = entityFactory.getUser();
         expectedUser.getSubscriptions().add(subscription);
         when(userService.findByUsername(subscription.getUsername()))
                 .thenReturn(subscription);
@@ -101,6 +76,9 @@ class SubsServiceImplTest {
 
     @Test
     void shouldShowSubscriptionsFromUser() {
+        User user1 = entityFactory.getUser();
+        User user2 = entityFactory.getUser();
+
         user1.getSubscriptions().add(user2);
         List<UserResponse> expected = user1
                 .getSubscriptions()
@@ -115,6 +93,9 @@ class SubsServiceImplTest {
 
     @Test
     void shouldShowSubscribersFromUser() {
+        User user1 = entityFactory.getUser();
+        User user2 = entityFactory.getUser();
+
         user1.getSubscriptions().add(user2);
         List<UserResponse> expected = user2
                 .getSubscribers()
@@ -129,8 +110,9 @@ class SubsServiceImplTest {
 
     @Test
     void shouldShowIsUserFriendToOther() {
-        User expected1 = user1;
-        User expected2 = user2;
+        User expected1 = entityFactory.getUser();
+        User expected2 = entityFactory.getUser();
+
         subsService.isFriends(expected1, expected2);
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
