@@ -39,7 +39,7 @@ public class AuthControllerImpl implements AuthController {
     @Operation(summary = "Receives login form and returns bearer token",
             responses = @ApiResponse(responseCode = "200", description = "Successful login"))
     public @ResponseBody ResponseEntity<AuthResponse> login(
-            @RequestBody LoginRequest request) {
+           @Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.auth(request));
     }
 

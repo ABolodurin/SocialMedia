@@ -15,12 +15,11 @@ import jakarta.validation.constraints.NotEmpty;
 @NoArgsConstructor
 public class LoginRequest {
     @Schema(description = "User username")
-    @NotEmpty
-    @Email
+    @NotEmpty(message = "Field must be not empty")
     private String username;
 
     @Schema(description = "User password")
-    @NotEmpty
+    @NotEmpty(message = "Field must be not empty")
     private String password;
 
 }

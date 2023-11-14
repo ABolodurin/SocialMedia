@@ -6,13 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.entities.CommonException;
-import ru.bolodurin.socialmedia.model.entities.Post;
-import ru.bolodurin.socialmedia.model.entities.Role;
 import ru.bolodurin.socialmedia.model.entities.User;
 import ru.bolodurin.socialmedia.repositories.UserRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -22,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
-    private User user;
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
     private UserService userService;
 
     @Mock
@@ -31,21 +29,11 @@ class UserServiceImplTest {
     @BeforeEach
     void init() {
         userService = new UserServiceImpl(userRepository);
-
-        user = User
-                .builder()
-                .username("username")
-                .email("email")
-                .password("password")
-                .role(Role.USER)
-                .posts(List.of(new Post()))
-                .subscriptions(List.of(new User()))
-                .subscribers(List.of(new User()))
-                .build();
     }
 
     @Test
     void shouldFindUserByUsername() {
+        User user = entityFactory.getUser();
         String expectedUsername = user.getUsername();
         when(userRepository.findByUsername(expectedUsername)).thenReturn(Optional.of(user));
 
@@ -68,7 +56,7 @@ class UserServiceImplTest {
 
     @Test
     void shouldAddNewUser() {
-        User expected = user;
+        User expected = entityFactory.getUser();
 
         userService.add(expected);
 
@@ -80,13 +68,15 @@ class UserServiceImplTest {
 
     @Test
     void shouldUpdateUser() {
-        User expected = user;
-        when(userRepository.findByUsername(expected.getUsername()))
-                .thenReturn(Optional.of(user));
+        User beforeUpdate = entityFactory.getUser();
+        User afterUpdate = entityFactory.getUser();
+        when(userRepository.findByUsername(beforeUpdate.getUsername()))
+                .thenReturn(Optional.of(beforeUpdate));
 
-        userService.update(expected.getUsername(), expected);
+        userService.update(beforeUpdate.getUsername(), afterUpdate);
 
-        verify(userRepository).save(expected);
+        verify(userRepository).findByUsername(beforeUpdate.getUsername());
+        verify(userRepository).save(afterUpdate);
     }
 
 }

@@ -109,4 +109,4 @@ Post contains
 
 ### Testing
 
-- Services and repositories are covered with unit tests
+- All controllers, services, and repositories are fully covered with unit tests

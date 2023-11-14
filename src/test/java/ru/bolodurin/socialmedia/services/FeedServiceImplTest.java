@@ -7,11 +7,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
+import ru.bolodurin.socialmedia.TestEntityFactory;
 import ru.bolodurin.socialmedia.model.entities.CommonException;
 import ru.bolodurin.socialmedia.model.entities.Post;
-import ru.bolodurin.socialmedia.model.mappers.PostResponseMapper;
-import ru.bolodurin.socialmedia.model.entities.Role;
 import ru.bolodurin.socialmedia.model.entities.User;
+import ru.bolodurin.socialmedia.model.mappers.PostResponseMapper;
 import ru.bolodurin.socialmedia.repositories.FeedRepository;
 
 import java.util.List;
@@ -25,32 +25,20 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FeedServiceImplTest {
-    private User user;
+    private final TestEntityFactory entityFactory = TestEntityFactory.get();
     private FeedService feedService;
 
     @Mock
     private FeedRepository feedRepository;
 
-
     @BeforeEach
     void init() {
         this.feedService = new FeedServiceImpl(new PostResponseMapper(), feedRepository);
-
-        user = User
-                .builder()
-                .username("username")
-                .email("email")
-                .password("password")
-                .role(Role.USER)
-                .posts(List.of(new Post()))
-                .subscriptions(List.of(new User()))
-                .subscribers(List.of(new User()))
-                .build();
     }
 
     @Test
     void shouldReturnValidFeed() {
-        User actualUser = user;
+        User actualUser = entityFactory.getUser();
         when(feedRepository.findPostsBySubscriptionsFromUser(any(), any()))
                 .thenReturn(Optional.of(new PageImpl<>(List.of(new Post()))));
 
@@ -64,11 +52,11 @@ class FeedServiceImplTest {
 
     @Test
     void shouldThrowWhenUserHasEmptyFeed() {
-        String expected = user.getUsername();
+        User user = entityFactory.getUser();
 
         assertThatThrownBy(() -> feedService.getFeedForUser(user))
                 .isInstanceOf(CommonException.class)
-                .hasMessageContaining(expected);
+                .hasMessageContaining(user.getUsername());
     }
 
 }
